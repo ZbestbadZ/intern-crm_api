@@ -1,0 +1,38 @@
+version: '3'
+services:
+
+  app:
+    container_name: crm_app
+    build:
+      context: .
+      dockerfile: ./docker/php-fpm/Dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php-fpm/local.ini:/usr/local/etc/php/conf.d/local.ini
+    links:
+      - mysql
+
+  nginx:
+    image: nginx:alpine
+    container_name: crm_nginx
+    ports:
+      - "8089:80"
+      - "4433:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    links:
+      - app
+
+  mysql:
+    image: mysql:5.7
+    container_name: crm_mysql
+    ports:
+      - 13399:3306
+    volumes:
+      - ./docker/mysql/dbdata/:/docker-entrypoint-initdb.d
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    environment:
+      MYSQL_DATABASE: miichi_crm_api
+      MYSQL_ROOT_PASSWORD: root
