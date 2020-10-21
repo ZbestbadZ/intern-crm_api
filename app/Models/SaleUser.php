@@ -29,7 +29,7 @@ class SaleUser extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'id', 'email', 'password', 'active', 'expirationdate'
+        'id', 'email', 'password', 'active', 'expired_at'
     ];
 
     /**
