@@ -20,6 +20,7 @@ class CreateTableSaleUserTable extends Migration
             $table->string('password');
             $table->timestamp('expirationdate')->nullable();
             $table->tinyInteger('active')->default(0);
+            $table->tinyInteger('role_id')->default(3);
             $table->softDeletes();
             $table->timestamps();
         });
