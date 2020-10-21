@@ -29,7 +29,7 @@ class SaleUser extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'id', 'email', 'password', 'active', 'expired_at'
+        'id', 'email', 'password', 'is_active', 'expired_at', 'role_id'
     ];
 
     /**
@@ -43,7 +43,7 @@ class SaleUser extends Authenticatable implements JWTSubject
 
     public function getAuthPassword()
     {
-        return Hash::make($this->PASSWORD);
+        return Hash::make($this->password);
     }
 
     /**
