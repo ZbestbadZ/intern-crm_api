@@ -15,12 +15,11 @@ class CreateTableSaleUserTable extends Migration
     {
         Schema::create('sale_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->timestamp('expirationdate')->nullable();
-            $table->tinyInteger('active')->default(0);
-            $table->tinyInteger('role_id')->default(3);
+            $table->timestamp('expired_at')->nullable()->comment('"Expiration User"');
+            $table->tinyInteger('is_active')->default(0)->comment('"0: inactive, 1: active"');
+            $table->tinyInteger('role_id')->default()->comment('"1: Admin, 2: Moderator, 3: Member, 4: Guest"');
             $table->softDeletes();
             $table->timestamps();
         });

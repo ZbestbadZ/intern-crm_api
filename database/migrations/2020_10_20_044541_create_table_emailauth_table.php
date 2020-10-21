@@ -15,12 +15,12 @@ class CreateTableEmailauthTable extends Migration
     {
         Schema::create('emailauth', function (Blueprint $table) {
             $table->id();
-            $table->string('authcode');
+            $table->string('authcode')->comment('"Code Authencation"');
             $table->string('email');
-            $table->string('password_tmp');
+            $table->string('password_tmp')->comment('"Password Provisional"');
             $table->integer('sale_user_id');
-            $table->tinyInteger('authpurpose');
-            $table->timestamp('expirationdatetime');
+            $table->tinyInteger('authpurpose')->comment('"1: Create new, 2: Forgot Password"');
+            $table->timestamp('expiration_at')->nullable()->comment('"Authencation Code Expiration Time"');
             $table->timestamps();
         });
     }

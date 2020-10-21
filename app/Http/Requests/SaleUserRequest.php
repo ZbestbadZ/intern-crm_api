@@ -24,18 +24,27 @@ class SaleUserRequest extends FormRequest
      */
     public function rules()
     {
-        // $saleUserId = $this->request->get('id', 0);
-
+        $saleUserId = $this->request->get('id', 0);
         return [
-            // 'email' => [
-            //     'required',
-            //     'max:191',
-            //     Rule::unique('sale_user', 'email')->where(function ($query) {
-            //         return $query->where('deleted_at', 0);
-            //     })->ignore($saleUserId, 'id')
-            // ],
-            // 'name' => 'required|max:60',
-            // 'password' => 'required'
+            'email' => [
+                'bail',
+                'required',
+                'max:191',
+                'email',
+                'regex:/(.*)@miichisoft\.(com|net)/i',
+                Rule::unique('sale_user', 'email')->where(function ($query) {
+                    return $query->whereNull('deleted_at');
+                })->ignore($saleUserId, 'id')
+            ],
+            'password' => [
+                'bail',
+                'required',
+                'min:8',
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/[0-9]/',      // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ]
         ];
     }
 }
