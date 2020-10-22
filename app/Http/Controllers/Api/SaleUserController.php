@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\SaleUserRequest;
+use App\Http\Requests\SaleUserPasswordRequest;
 use App\Repositories\SaleUser\SaleUserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -185,14 +186,39 @@ class SaleUserController extends Controller
                 ], Response::HTTP_OK);
             }
         }
-        return response()->json([
-            'message' =>  'Authcode Error',
+        return response()->error([
+            'message' =>  'Token Error',
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function changeForgotPassword(Request $request){
+    public function changeForgotPassword(SaleUserPasswordRequest $request){
+        $password = $request->get('password');
+        $token = $request->get('token');
 
-    }
+        $authPurpose = Config::get('constants.auth_purpose');
+        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
 
+        if ($tokenData) {
+            if (strtotime("now") > strtotime($tokenData->expiration_at)) {
+                return response()->error([
+                    'message' =>  'Token Error',
+                ], Response::HTTP_UNPROCESSABLE_ENTITY,);
+            }
+
+            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
+            if ($saleUser) {
+                $saleUser->password = hash('sha256', $password);
+                $saleUser->save();
+                // If the user shouldn't reuse the token later, delete the token
+                EmailAuth::where('email', $saleUser->email)->where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->delete();
     
+                return response()->success([
+                    'message' => 'OK',
+                ], Response::HTTP_OK);
+            }
+        }
+        return response()->error([
+            'message' =>  'Token Error',
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
 }
