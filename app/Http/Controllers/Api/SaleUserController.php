@@ -114,4 +114,18 @@ class SaleUserController extends Controller
             'message' => 'Failed to Authenticate'
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    public function logout(Request $request)
+    {
+        try {
+            JWTAuth::invalidate();
+            return response()->success([
+                'message' => 'You have successfully logged out.',
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->error([
+                'message' => 'Failed to logout, please try again.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }

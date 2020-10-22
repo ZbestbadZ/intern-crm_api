@@ -15,5 +15,7 @@ Route::namespace('Api')->group(function () {
         Route::get('/listuser', function(){
             echo 'sale list';
         });
+
+        Route::post('/auth/logout', 'SaleUserController@logout');
     });
 });
