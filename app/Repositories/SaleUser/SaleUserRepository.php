@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use App\Repositories\EmailAuth\EmailAuthRepositoryInterface;
 use Carbon\Carbon;
 use App\Jobs\SendMailCreateSaleUser;
+use App\Jobs\SendMailForgotPasswordSaleUser;
 use App\Helpers\AppHelper;
 
 
@@ -61,6 +62,30 @@ class SaleUserRepository implements SaleUserRepositoryInterface
             return $currentToken;
         }
 
+        return false;
+    }
+
+    public function forgotPassword($email){
+        $saleUser = SaleUser::where('email', $email)->where('is_auth', SaleUser::USER_AUTH)->first();
+        if (empty($saleUser)) {
+            return false;
+        }
+
+        $authPurpose = Config::get('constants.auth_purpose');
+        $emailForgotPass = $this->_emailAuth->sendMailForgotPassword($authPurpose['forgot_password'], $saleUser->id, $saleUser->email, 30 , 'i');
+        if($emailForgotPass){
+            try {
+                $urlMail = AppHelper::getDomain();
+                $dataSendMail['verifyForgotPass'] = isset($emailForgotPass['token']) ? url($urlMail . '/verifyForgotPassword?token='. $emailForgotPass['token']) : '';
+                $dataSendMail['mailUser'] = isset($emailForgotPass['email']) ? $emailForgotPass['email'] : '';
+                $dataSendMail['subject'] = "[CRM-Miichisoft] Yêu cầu mật khẩu";
+                dispatch((new SendMailForgotPasswordSaleUser($dataSendMail))->onQueue('sendMailForgotPasswordSaleUser'));
+                return true;
+            } catch (\Exception $e) {
+                Log::error($e);
+                return false;
+            }
+        }
         return false;
     }
 }

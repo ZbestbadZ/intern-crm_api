@@ -84,7 +84,7 @@ class SaleUserController extends Controller
         } catch (\Exception $e) {
             return response()->error([
                 'message' => 'A system error has occurred.'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR,);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -114,4 +114,85 @@ class SaleUserController extends Controller
             'message' => 'Failed to Authenticate'
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    public function forgotPassword(Request $request)
+    {
+        $messages = array(
+            'email.required' => 'Email is required.',
+            'email.max' => 'The :attribute may not be greater than :max characters.',
+            'email.email' => 'The :attribute must be a valid email address.',
+            'email.regex' => 'The :attribute format is invalid.',
+        );
+        $validator =  Validator::make($request->all(), [
+            'email' => [
+                'bail',
+                'required',
+                'max:191',
+                'email',
+                'regex:/(.*)@miichisoft\.(com|net)/i',
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->error([
+                $validator->errors()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $emailResetPassUser = $request->get('email');
+        $resetPassSaleUser = $this->_saleUser->forgotPassword($emailResetPassUser);
+        if($resetPassSaleUser){
+            return response()->success([
+                'message' => 'Check Mail'
+            ]);
+        }
+        return response()->error([
+            'message' => 'A system error has occurred.'
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function verifyForgotPassword(Request $request){
+        $data = $request->all();
+        $validator = Validator::make($data, [
+            'token'   => 'required'
+        ],
+        [
+            'token.required' => 'The :attribute field is required.',
+        ]
+        );
+        if ($validator->fails()) {
+            return response()->error([
+                $validator->errors(),
+            ],Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $token = $data['token'];
+
+        $authPurpose = Config::get('constants.auth_purpose');
+        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
+
+        if ($tokenData) {
+            if (strtotime("now") > strtotime($tokenData->expiration_at)) {
+                return response()->error([
+                    'message' =>  'Token Error',
+                ], Response::HTTP_UNPROCESSABLE_ENTITY,);
+            }
+
+            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
+            if ($saleUser) {
+                return response()->success([
+                    'message' => 'OK',
+                ], Response::HTTP_OK);
+            }
+        }
+        return response()->json([
+            'message' =>  'Authcode Error',
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function changeForgotPassword(Request $request){
+
+    }
+
+    
 }

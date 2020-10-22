@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::namespace('Api')->group(function () {
     Route::post('/auth/login', 'SaleUserController@login');
+    Route::post('/auth/forgotPassword', 'SaleUserController@forgotPassword');
+    Route::post('/auth/verifyForgot', 'SaleUserController@verifyForgotPassword');
+    Route::post('/auth/changeForgotPassword', 'SaleUserController@changeForgotPassword');
     
     Route::prefix('saleuser')->group(function () {
         Route::post('/create', 'SaleUserController@create');
