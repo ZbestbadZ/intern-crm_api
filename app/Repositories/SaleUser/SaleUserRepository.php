@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
 use App\Models\SaleUser;
+use App\Models\EmailAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Repositories\EmailAuth\EmailAuthRepositoryInterface;
@@ -75,8 +76,8 @@ class SaleUserRepository implements SaleUserRepositoryInterface
         $emailForgotPass = $this->_emailAuth->sendMailForgotPassword($authPurpose['forgot_password'], $saleUser->id, $saleUser->email, 30 , 'i');
         if($emailForgotPass){
             try {
-                $urlMail = AppHelper::getDomain();
-                $dataSendMail['verifyForgotPass'] = isset($emailForgotPass['token']) ? url($urlMail . '/verifyForgotPassword?token='. $emailForgotPass['token']) : '';
+                $urlMail = config('app.domain_front_end');
+                $dataSendMail['verifyForgotPass'] = isset($emailForgotPass['token']) ? $urlMail . '/verifyForgotPassword?token='. $emailForgotPass['token'] : '';
                 $dataSendMail['mailUser'] = isset($emailForgotPass['email']) ? $emailForgotPass['email'] : '';
                 $dataSendMail['subject'] = "[CRM-Miichisoft] Yêu cầu mật khẩu";
                 dispatch((new SendMailForgotPasswordSaleUser($dataSendMail))->onQueue('sendMailForgotPasswordSaleUser'));
@@ -84,6 +85,42 @@ class SaleUserRepository implements SaleUserRepositoryInterface
             } catch (\Exception $e) {
                 Log::error($e);
                 return false;
+            }
+        }
+        return false;
+    }
+
+    public function verifyForgotPassword($token, $authPurpose){
+        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
+
+        if ($tokenData) {
+            if (strtotime("now") > strtotime($tokenData->expiration_at)) {
+                return false;
+            }
+
+            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
+            if ($saleUser) {
+               return true;
+            }
+        }
+        return false;
+    }
+
+    public function changeForgotPassword($token, $password, $authPurpose){
+        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
+
+        if ($tokenData) {
+            if (strtotime("now") > strtotime($tokenData->expiration_at)) {
+                return false;
+            }
+
+            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
+            if ($saleUser) {
+                $saleUser->password = hash('sha256', $password);
+                $saleUser->save();
+                // If the user shouldn't reuse the token later, delete the token
+                EmailAuth::where('email', $saleUser->email)->where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->delete();
+                return true;
             }
         }
         return false;

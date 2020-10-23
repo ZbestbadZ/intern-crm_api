@@ -168,24 +168,15 @@ class SaleUserController extends Controller
         }
 
         $token = $data['token'];
-
         $authPurpose = Config::get('constants.auth_purpose');
-        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
-
-        if ($tokenData) {
-            if (strtotime("now") > strtotime($tokenData->expiration_at)) {
-                return response()->error([
-                    'message' =>  'Token Error',
-                ], Response::HTTP_UNPROCESSABLE_ENTITY,);
-            }
-
-            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
-            if ($saleUser) {
-                return response()->success([
-                    'message' => 'OK',
-                ], Response::HTTP_OK);
-            }
+        $verifyPassSaleUser = $this->_saleUser->verifyForgotPassword($token, $authPurpose);
+        
+        if ($verifyPassSaleUser) {
+            return response()->success([
+                'message' => 'OK',
+            ], Response::HTTP_OK);
         }
+
         return response()->error([
             'message' =>  'Token Error',
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -194,28 +185,12 @@ class SaleUserController extends Controller
     public function changeForgotPassword(SaleUserPasswordRequest $request){
         $password = $request->get('password');
         $token = $request->get('token');
-
         $authPurpose = Config::get('constants.auth_purpose');
-        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
-
-        if ($tokenData) {
-            if (strtotime("now") > strtotime($tokenData->expiration_at)) {
-                return response()->error([
-                    'message' =>  'Token Error',
-                ], Response::HTTP_UNPROCESSABLE_ENTITY,);
-            }
-
-            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
-            if ($saleUser) {
-                $saleUser->password = hash('sha256', $password);
-                $saleUser->save();
-                // If the user shouldn't reuse the token later, delete the token
-                EmailAuth::where('email', $saleUser->email)->where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->delete();
-    
-                return response()->success([
-                    'message' => 'OK',
-                ], Response::HTTP_OK);
-            }
+        $changeForgotPassword = $this->_saleUser->changeForgotPassword($token, $password, $authPurpose);
+        if ($changeForgotPassword) {
+            return response()->success([
+                'message' => 'OK',
+            ], Response::HTTP_OK);
         }
         return response()->error([
             'message' =>  'Token Error',

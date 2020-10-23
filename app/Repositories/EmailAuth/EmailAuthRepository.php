@@ -55,7 +55,8 @@ class EmailAuthRepository implements EmailAuthRepositoryInterface
                 try {
                     $saleUser = SaleUser::findOrFail($userId);
                     $saleUser->update([
-                        'password' => $password
+                        'password' => $password,
+                        'is_auth' => SaleUser::USER_AUTH
                     ]);
                     DB::commit();
                     $deleteToken  = $this->deleteToken($token);

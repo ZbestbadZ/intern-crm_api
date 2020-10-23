@@ -10,4 +10,8 @@ interface SaleUserRepositoryInterface
     public function verifyToken($token);
 
     public function forgotPassword($email);
+
+    public function verifyForgotPassword($token, $authPurpose);
+
+    public function changeForgotPassword($token, $password, $authPurpose);
 }
