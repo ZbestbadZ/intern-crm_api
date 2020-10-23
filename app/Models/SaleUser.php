@@ -71,4 +71,9 @@ class SaleUser extends Authenticatable implements JWTSubject
         return $this->id;
     }
 
+    public function profile()
+    {
+        return $this->hasOne(Profile::class, 'id', 'profile_id');
+    }
+
 }

@@ -114,4 +114,19 @@ class SaleUserController extends Controller
             'message' => 'Failed to Authenticate'
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    public function profile(Request $request){
+        $infoSaleUser = Auth::user();
+        $id = $infoSaleUser->id;
+        $email = $infoSaleUser->email;
+        $profileSaleUser = $this->_saleUser->profile($id, $email);
+        if(!empty($profileSaleUser)){
+            return response()->success([
+                'profileUser' => $profileSaleUser
+            ], Response::HTTP_OK);
+        }
+        return response()->error([
+            'message' => 'Profile Empty'
+        ], Response::HTTP_NOT_FOUND);
+    }
 }

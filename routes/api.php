@@ -12,8 +12,6 @@ Route::namespace('Api')->group(function () {
     });
 
     Route::group(['middleware' => 'authApi'], function () {
-        Route::get('/listuser', function(){
-            echo 'sale list';
-        });
+        Route::post('/profile', 'SaleUserController@profile');
     });
 });
