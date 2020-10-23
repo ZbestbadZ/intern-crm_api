@@ -40,8 +40,8 @@ class SaleUserRepository implements SaleUserRepositoryInterface
         $this->_emailAuth->updateUserToken($emailAuth['token'], $newUser->id);
 
         try {
-            $urlMail = AppHelper::getDomain();
-            $dataSendMail['verifyUrl'] = url($urlMail . '/verifyUser?token='. $emailAuth['token']);
+            $urlMail = config('app.domain_front_end');
+            $dataSendMail['verifyUrl'] = $urlMail . '/verifyUser?token='. $emailAuth['token'];
             $dataSendMail['mailUser'] = $email;
             $dataSendMail['subject'] = "[CRM-Miichisoft] Xác thực Email";
             dispatch((new SendMailCreateSaleUser($dataSendMail))->onQueue('sendMailCreateSaleUser'));

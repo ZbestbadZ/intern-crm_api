@@ -7,6 +7,7 @@ use App\Models\SaleUser;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class EmailAuthRepository implements EmailAuthRepositoryInterface
 {
@@ -70,7 +71,8 @@ class EmailAuthRepository implements EmailAuthRepositoryInterface
     }
 
     public function deleteToken($token) {
-        EmailAuth::where('authcode', '=', $token)->delete();
+        $authPurpose = Config::get('constants.auth_purpose');
+        EmailAuth::where('authcode', '=', $token)->where('authpurpose', $authPurpose['create_new'])->delete();
 
         return true;
     }
