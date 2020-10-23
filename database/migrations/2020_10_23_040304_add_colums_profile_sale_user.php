@@ -14,7 +14,7 @@ class AddColumsProfileSaleUser extends Migration
     public function up()
     {
         Schema::table('sale_user', function (Blueprint $table) {
-            $table->string('profile_id')->after('role_id')->nullable();
+            $table->integer('profile_id')->after('role_id')->nullable();
         });
 
     }

@@ -4,6 +4,7 @@ namespace App\Repositories\EmailAuth;
 
 use App\Models\EmailAuth;
 use App\Models\SaleUser;
+use App\Models\Profile;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -54,9 +55,15 @@ class EmailAuthRepository implements EmailAuthRepositoryInterface
                 DB::beginTransaction();
                 try {
                     $saleUser = SaleUser::findOrFail($userId);
-                    $saleUser->update([
+                    $dataUpdateSaleUser = [
                         'password' => $password
-                    ]);
+                    ];
+                    $checkProfileUser = Profile::whereNull('deleted_at')->where('official_email', $saleUser->email)->first();
+                    if(!empty($checkProfileUser)){
+                        $dataUpdateSaleUser['profile_id'] = $checkProfileUser->id;
+                    }
+                    // dd($dataUpdateSaleUser);
+                    $saleUser->update($dataUpdateSaleUser);
                     DB::commit();
                     $deleteToken  = $this->deleteToken($token);
                     return $userId;
