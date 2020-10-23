@@ -28,6 +28,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'domain_front_end' => env('DOMAIN_FRONT_END', 'http://localhost'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
@@ -175,6 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        App\Providers\ResponseMacroServiceProvider::class,
 
     ],
 

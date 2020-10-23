@@ -14,6 +14,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SaleUser extends Authenticatable implements JWTSubject
 {
     use Notifiable, SoftDeletes;
+    const USER_INACTIVE = 0;
+    const USER_ACTIVE = 1;
+    const ROLE_ADMIN = 1;
+    const ROLE_MODERATOR = 2;
+    const ROLE_MEMBER = 3;
+    const ROLE_GUEST = 4;
 
     protected $table = 'sale_user';
 
@@ -23,7 +29,7 @@ class SaleUser extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'id', 'email', 'password', 'name', 'active', 'expirationdate'
+        'id', 'email', 'password', 'is_active', 'expired_at', 'role_id'
     ];
 
     /**
@@ -37,7 +43,7 @@ class SaleUser extends Authenticatable implements JWTSubject
 
     public function getAuthPassword()
     {
-        return Hash::make($this->PASSWORD);
+        return Hash::make($this->password);
     }
 
     /**
@@ -63,11 +69,6 @@ class SaleUser extends Authenticatable implements JWTSubject
     public function getUSERID()
     {
         return $this->id;
-    }
-
-    public function getUSERNAME()
-    {
-        return $this->name;
     }
 
 }

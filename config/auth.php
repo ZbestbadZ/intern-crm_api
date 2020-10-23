@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'sale_user',
+        'passwords' => 'sale_user',
     ],
 
     /*
@@ -46,6 +46,11 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        'sale_user' => [
+            'driver' => 'jwt',
+            'provider' => 'sale_user',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -71,6 +76,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
+        'sale_user' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\SaleUser::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -98,6 +107,11 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
+        ],
+        'sale_user' => [
+            'provider' => 'sale_user',
+            'table' => 'password_resets',
+            'expire' => 60,
         ],
     ],
 

@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $repositories = [
             'SaleUser\SaleUserRepositoryInterface' => 'SaleUser\SaleUserRepository',
+            'EmailAuth\EmailAuthRepositoryInterface' => 'EmailAuth\EmailAuthRepository',
         ];
 
         foreach ($repositories as $key=>$val){
