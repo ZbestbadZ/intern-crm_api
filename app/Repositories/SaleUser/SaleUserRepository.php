@@ -6,11 +6,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
 use App\Models\SaleUser;
+use App\Models\EmailAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Repositories\EmailAuth\EmailAuthRepositoryInterface;
 use Carbon\Carbon;
 use App\Jobs\SendMailCreateSaleUser;
+use App\Jobs\SendMailForgotPasswordSaleUser;
 use App\Helpers\AppHelper;
 
 
@@ -42,7 +44,7 @@ class SaleUserRepository implements SaleUserRepositoryInterface
             $urlMail = config('app.domain_front_end');
             $dataSendMail['verifyUrl'] = $urlMail . '/verifyUser?token='. $emailAuth['token'];
             $dataSendMail['mailUser'] = $email;
-            $dataSendMail['subject'] = "[CRM-Miichisoft] Xác thực Email";
+            $dataSendMail['subject'] = __('message.subject_mail_create_sale_user');
             dispatch((new SendMailCreateSaleUser($dataSendMail))->onQueue('sendMailCreateSaleUser'));
         }
         catch (\Exception $e) {
@@ -61,6 +63,66 @@ class SaleUserRepository implements SaleUserRepositoryInterface
             return $currentToken;
         }
 
+        return false;
+    }
+
+    public function forgotPassword($email){
+        $saleUser = SaleUser::where('email', $email)->where('is_auth', SaleUser::USER_AUTH)->first();
+        if (empty($saleUser)) {
+            return false;
+        }
+
+        $authPurpose = Config::get('constants.auth_purpose');
+        $emailForgotPass = $this->_emailAuth->sendMailForgotPassword($authPurpose['forgot_password'], $saleUser->id, $saleUser->email, 30 , 'i');
+        if($emailForgotPass){
+            try {
+                $urlMail = config('app.domain_front_end');
+                $dataSendMail['verifyForgotPass'] = isset($emailForgotPass['token']) ? $urlMail . '/verifyForgotPassword?token='. $emailForgotPass['token'] : '';
+                $dataSendMail['mailUser'] = isset($emailForgotPass['email']) ? $emailForgotPass['email'] : '';
+                $dataSendMail['subject'] = __('message.subject_mail_forgot_password');
+                dispatch((new SendMailForgotPasswordSaleUser($dataSendMail))->onQueue('send_mail_forgot_password_sale_user'));
+                return true;
+            } catch (\Exception $e) {
+                Log::error($e);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public function verifyForgotPassword($token, $authPurpose){
+        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->firstOrFail();
+
+        if ($tokenData) {
+            if (strtotime(Carbon::now()) > strtotime($tokenData->expiration_at)) {
+                return false;
+            }
+
+            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->firstOrFail();
+            if ($saleUser) {
+               return true;
+            }
+        }
+        return false;
+    }
+
+    public function changeForgotPassword($token, $password, $authPurpose){
+        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
+
+        if ($tokenData) {
+            if (strtotime(Carbon::now()) > strtotime($tokenData->expiration_at)) {
+                return false;
+            }
+
+            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
+            if ($saleUser) {
+                $saleUser->password = hash('sha256', $password);
+                $saleUser->save();
+                // If the user shouldn't reuse the token later, delete the token
+                EmailAuth::where('email', $saleUser->email)->where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->delete();
+                return true;
+            }
+        }
         return false;
     }
 

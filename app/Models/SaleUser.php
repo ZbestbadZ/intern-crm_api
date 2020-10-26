@@ -20,6 +20,8 @@ class SaleUser extends Authenticatable implements JWTSubject
     const ROLE_MODERATOR = 2;
     const ROLE_MEMBER = 3;
     const ROLE_GUEST = 4;
+    const USER_INAUTH = 0;
+    const USER_AUTH = 1;
 
     protected $table = 'sale_user';
 
@@ -29,7 +31,7 @@ class SaleUser extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'id', 'email', 'password', 'is_active', 'expired_at', 'role_id', 'profile_id'
+        'id', 'email', 'password', 'is_active', 'expired_at', 'role_id', 'is_auth', 'profile_id'
     ];
 
     /**
