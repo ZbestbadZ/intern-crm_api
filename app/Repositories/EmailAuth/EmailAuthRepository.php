@@ -62,7 +62,6 @@ class EmailAuthRepository implements EmailAuthRepositoryInterface
                     if(!empty($checkProfileUser)){
                         $dataUpdateSaleUser['profile_id'] = $checkProfileUser->id;
                     }
-                    // dd($dataUpdateSaleUser);
                     $saleUser->update($dataUpdateSaleUser);
                     DB::commit();
                     $deleteToken  = $this->deleteToken($token);
