@@ -44,7 +44,7 @@ class SaleUserRepository implements SaleUserRepositoryInterface
             $urlMail = config('app.domain_front_end');
             $dataSendMail['verifyUrl'] = $urlMail . '/verifyUser?token='. $emailAuth['token'];
             $dataSendMail['mailUser'] = $email;
-            $dataSendMail['subject'] = "[CRM-Miichisoft] Xác thực Email";
+            $dataSendMail['subject'] = __('message.subject_mail_create_sale_user');
             dispatch((new SendMailCreateSaleUser($dataSendMail))->onQueue('sendMailCreateSaleUser'));
         }
         catch (\Exception $e) {
@@ -79,7 +79,7 @@ class SaleUserRepository implements SaleUserRepositoryInterface
                 $urlMail = config('app.domain_front_end');
                 $dataSendMail['verifyForgotPass'] = isset($emailForgotPass['token']) ? $urlMail . '/verifyForgotPassword?token='. $emailForgotPass['token'] : '';
                 $dataSendMail['mailUser'] = isset($emailForgotPass['email']) ? $emailForgotPass['email'] : '';
-                $dataSendMail['subject'] = "[CRM-Miichisoft] Yêu cầu mật khẩu";
+                $dataSendMail['subject'] = __('message.subject_mail_forgot_password');
                 dispatch((new SendMailForgotPasswordSaleUser($dataSendMail))->onQueue('send_mail_forgot_password_sale_user'));
                 return true;
             } catch (\Exception $e) {
