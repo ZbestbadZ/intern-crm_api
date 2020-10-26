@@ -52,7 +52,7 @@ class SaleUserController extends Controller
             $user = Auth::guard('sale_user')->user();
             if (!empty($user->deleted_at)) {
                 return response()->error([
-                    'message' => 'The ID or password is different',
+                    'message' => __('message.login_fail'),
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $statusUser = $user->is_active;
@@ -70,7 +70,7 @@ class SaleUserController extends Controller
             }
         }
         return response()->error([
-            'message' => 'The ID or password is different.',
+            'message' => __('message.login_fail'),
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
@@ -80,11 +80,11 @@ class SaleUserController extends Controller
         try {
             $newUser = $this->_saleUser->create($data['email'], $data['password']);
             return response()->success([
-                'message' => 'Create User Success'
+                'message' => __('message.sale_user_create_success')
             ]);
         } catch (\Exception $e) {
             return response()->error([
-                'message' => 'A system error has occurred.'
+                'message' => __('message.error_system')
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -106,13 +106,13 @@ class SaleUserController extends Controller
 
         if ($userId = $this->_saleUser->verifyToken($data['token'])) {
             return response()->success([
-                'message' => 'Success to Authenticate',
+                'message' => __('message.auth_code_ok'),
                 'userId' => $userId,
             ], Response::HTTP_OK);
         }
 
         return response()->error([
-            'message' => 'Failed to Authenticate'
+            'message' => __('message.auth_code_error'),
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
@@ -144,11 +144,11 @@ class SaleUserController extends Controller
         $resetPassSaleUser = $this->_saleUser->forgotPassword($emailResetPassUser);
         if($resetPassSaleUser){
             return response()->success([
-                'message' => 'Check Mail'
+                'message' =>  __('message.check_mail')
             ]);
         }
         return response()->error([
-            'message' => 'A system error has occurred.'
+            'message' =>  __('message.error_system')
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
@@ -173,12 +173,12 @@ class SaleUserController extends Controller
         
         if ($verifyPassSaleUser) {
             return response()->success([
-                'message' => 'OK',
+                'message' =>  __('message.success_ok'),
             ], Response::HTTP_OK);
         }
 
         return response()->error([
-            'message' =>  'Token Error',
+            'message' =>  __('message.error_token')
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
@@ -189,11 +189,11 @@ class SaleUserController extends Controller
         $changeForgotPassword = $this->_saleUser->changeForgotPassword($token, $password, $authPurpose);
         if ($changeForgotPassword) {
             return response()->success([
-                'message' => 'OK',
+                'message' => __('message.success_ok'),
             ], Response::HTTP_OK);
         }
         return response()->error([
-            'message' =>  'Token Error',
+            'message' =>  __('message.error_token')
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

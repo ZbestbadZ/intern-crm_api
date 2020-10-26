@@ -80,7 +80,7 @@ class SaleUserRepository implements SaleUserRepositoryInterface
                 $dataSendMail['verifyForgotPass'] = isset($emailForgotPass['token']) ? $urlMail . '/verifyForgotPassword?token='. $emailForgotPass['token'] : '';
                 $dataSendMail['mailUser'] = isset($emailForgotPass['email']) ? $emailForgotPass['email'] : '';
                 $dataSendMail['subject'] = "[CRM-Miichisoft] Yêu cầu mật khẩu";
-                dispatch((new SendMailForgotPasswordSaleUser($dataSendMail))->onQueue('sendMailForgotPasswordSaleUser'));
+                dispatch((new SendMailForgotPasswordSaleUser($dataSendMail))->onQueue('send_mail_forgot_password_sale_user'));
                 return true;
             } catch (\Exception $e) {
                 Log::error($e);
@@ -91,14 +91,14 @@ class SaleUserRepository implements SaleUserRepositoryInterface
     }
 
     public function verifyForgotPassword($token, $authPurpose){
-        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
+        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->firstOrFail();
 
         if ($tokenData) {
-            if (strtotime("now") > strtotime($tokenData->expiration_at)) {
+            if (strtotime(Carbon::now()) > strtotime($tokenData->expiration_at)) {
                 return false;
             }
 
-            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
+            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->firstOrFail();
             if ($saleUser) {
                return true;
             }
@@ -110,7 +110,7 @@ class SaleUserRepository implements SaleUserRepositoryInterface
         $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
 
         if ($tokenData) {
-            if (strtotime("now") > strtotime($tokenData->expiration_at)) {
+            if (strtotime(Carbon::now()) > strtotime($tokenData->expiration_at)) {
                 return false;
             }
 
