@@ -4,11 +4,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::namespace('Api')->group(function () {
-    Route::post('/auth/login', 'SaleUserController@login');
-    
-    Route::prefix('saleuser')->group(function () {
+    Route::prefix('sale/user')->group(function () {
         Route::post('/create', 'SaleUserController@create');
         Route::post('/verify', 'SaleUserController@checkExpiration');
+        Route::post('/login', 'SaleUserController@login');
+        Route::post('/forgotPassword', 'SaleUserController@forgotPassword');
+        Route::post('/verifyForgot', 'SaleUserController@verifyForgotPassword');
+        Route::post('/changeForgotPassword', 'SaleUserController@changeForgotPassword');
+        Route::post('/logout', 'SaleUserController@logout');
     });
 
     Route::group(['middleware' => 'authApi'], function () {
@@ -16,6 +19,5 @@ Route::namespace('Api')->group(function () {
             echo 'sale list';
         });
 
-        Route::post('/auth/logout', 'SaleUserController@logout');
     });
 });
