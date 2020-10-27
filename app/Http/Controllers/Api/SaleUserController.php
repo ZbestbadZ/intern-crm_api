@@ -18,13 +18,13 @@ use Illuminate\Support\Facades\Auth;
 
 class SaleUserController extends Controller
 {
-    protected $_saleUser;
+    protected $repository;
 
     public function __construct(
         SaleUserRepositoryInterface $saleUser
     )
     {
-        $this->_saleUser = $saleUser;
+        $this->repository = $saleUser;
     }
 
     public function login(Request $request)
@@ -78,7 +78,7 @@ class SaleUserController extends Controller
     {
         $data = $request->all();
         try {
-            $newUser = $this->_saleUser->create($data['email'], $data['password']);
+            $newUser = $this->repository->create($data['email'], $data['password']);
             return response()->success([
                 'message' => __('message.sale_user_create_success')
             ]);
@@ -104,7 +104,7 @@ class SaleUserController extends Controller
             ],Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if ($userId = $this->_saleUser->verifyToken($data['token'])) {
+        if ($userId = $this->repository->verifyToken($data['token'])) {
             return response()->success([
                 'message' => __('message.auth_code_ok'),
                 'userId' => $userId,
@@ -155,7 +155,7 @@ class SaleUserController extends Controller
         }
 
         $emailResetPassUser = $request->get('email');
-        $resetPassSaleUser = $this->_saleUser->forgotPassword($emailResetPassUser);
+        $resetPassSaleUser = $this->repository->forgotPassword($emailResetPassUser);
         if($resetPassSaleUser){
             return response()->success([
                 'message' =>  __('message.check_mail')
@@ -183,7 +183,7 @@ class SaleUserController extends Controller
 
         $token = $data['token'];
         $authPurpose = Config::get('constants.auth_purpose');
-        $verifyPassSaleUser = $this->_saleUser->verifyForgotPassword($token, $authPurpose);
+        $verifyPassSaleUser = $this->repository->verifyForgotPassword($token, $authPurpose);
         
         if ($verifyPassSaleUser) {
             return response()->success([
@@ -200,7 +200,7 @@ class SaleUserController extends Controller
         $password = $request->get('password');
         $token = $request->get('token');
         $authPurpose = Config::get('constants.auth_purpose');
-        $changeForgotPassword = $this->_saleUser->changeForgotPassword($token, $password, $authPurpose);
+        $changeForgotPassword = $this->repository->changeForgotPassword($token, $password, $authPurpose);
         if ($changeForgotPassword) {
             return response()->success([
                 'message' => __('message.success_ok'),

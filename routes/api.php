@@ -8,9 +8,9 @@ Route::namespace('Api')->group(function () {
         Route::post('/create', 'SaleUserController@create');
         Route::post('/verify', 'SaleUserController@checkExpiration');
         Route::post('/login', 'SaleUserController@login');
-        Route::post('/forgotPassword', 'SaleUserController@forgotPassword');
-        Route::post('/verifyForgot', 'SaleUserController@verifyForgotPassword');
-        Route::post('/changeForgotPassword', 'SaleUserController@changeForgotPassword');
+        Route::post('/forgot_password', 'SaleUserController@forgotPassword');
+        Route::post('/verify_forgot', 'SaleUserController@verifyForgotPassword');
+        Route::post('/change_forgot_password', 'SaleUserController@changeForgotPassword');
         Route::post('/logout', 'SaleUserController@logout');
     });
 

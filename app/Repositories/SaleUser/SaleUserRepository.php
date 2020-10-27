@@ -80,7 +80,7 @@ class SaleUserRepository implements SaleUserRepositoryInterface
                 $dataSendMail['verifyForgotPass'] = isset($emailForgotPass['token']) ? $urlMail . '/verifyForgotPassword?token='. $emailForgotPass['token'] : '';
                 $dataSendMail['mailUser'] = isset($emailForgotPass['email']) ? $emailForgotPass['email'] : '';
                 $dataSendMail['subject'] = __('message.subject_mail_forgot_password');
-                dispatch((new SendMailForgotPasswordSaleUser($dataSendMail))->onQueue('send_mail_forgot_password_sale_user'));
+                dispatch((new SendMailForgotPasswordSaleUser($dataSendMail))->onQueue('sendMailForgotPasswordSaleUser'));
                 return true;
             } catch (\Exception $e) {
                 Log::error($e);
@@ -91,38 +91,44 @@ class SaleUserRepository implements SaleUserRepositoryInterface
     }
 
     public function verifyForgotPassword($token, $authPurpose){
-        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->firstOrFail();
+        try {
+            $tokenData = EmailAuth::where('auth_code', $token)->where('auth_purpose', $authPurpose['forgot_password'])->firstOrFail();
 
-        if ($tokenData) {
-            if (strtotime(Carbon::now()) > strtotime($tokenData->expiration_at)) {
-                return false;
+            if ($tokenData) {
+                $expireTime = Carbon::parse($tokenData->expiration_at);
+                if($expireTime->greaterThan(Carbon::now())) {
+                    $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->firstOrFail();
+                    if ($saleUser) {
+                        return true;
+                    }
+                }
             }
-
-            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->firstOrFail();
-            if ($saleUser) {
-               return true;
-            }
+        } catch (\Exception $e) {
+            Log::error($e);
+            return false;
         }
-        return false;
     }
 
     public function changeForgotPassword($token, $password, $authPurpose){
-        $tokenData = EmailAuth::where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->first();
+        try {
+            $tokenData = EmailAuth::where('auth_code', $token)->where('auth_purpose', $authPurpose['forgot_password'])->firstOrFail();
 
-        if ($tokenData) {
-            if (strtotime(Carbon::now()) > strtotime($tokenData->expiration_at)) {
-                return false;
+            if ($tokenData) {
+                $expireTime = Carbon::parse($tokenData->expiration_at);
+                if($expireTime->greaterThan(Carbon::now())) {
+                    $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->firstOrFail();
+                    if ($saleUser) {
+                        $saleUser->password = hash('sha256', $password);
+                        $saleUser->save();
+                        // If the user shouldn't reuse the token later, delete the token
+                        EmailAuth::where('email', $saleUser->email)->where('auth_code', $token)->where('auth_purpose', $authPurpose['forgot_password'])->delete();
+                        return true;
+                    }
+                }
             }
-
-            $saleUser = SaleUser::where('email', $tokenData->email)->where('is_auth', SaleUser::USER_AUTH)->first();
-            if ($saleUser) {
-                $saleUser->password = hash('sha256', $password);
-                $saleUser->save();
-                // If the user shouldn't reuse the token later, delete the token
-                EmailAuth::where('email', $saleUser->email)->where('authcode', $token)->where('authpurpose', $authPurpose['forgot_password'])->delete();
-                return true;
-            }
+        } catch (\Exception $e) {
+            Log::error($e);
+            return false;
         }
-        return false;
     }
 }
