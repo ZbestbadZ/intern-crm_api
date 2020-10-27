@@ -11,5 +11,6 @@ return [
    'check_mail' => 'Check Mail',
    'subject_mail_forgot_password' => '[CRM-Miichisoft] Yêu cầu mật khẩu',
    'subject_mail_create_sale_user' => '[CRM-Miichisoft] Xác thực Email',
+   'profile_empty' => 'Profile Empty',
    
 ];

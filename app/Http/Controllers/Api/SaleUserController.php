@@ -208,7 +208,7 @@ class SaleUserController extends Controller
             ], Response::HTTP_OK);
         }
         return response()->error([
-            'message' => 'Profile Empty'
+            'message' => __('message.profile_empty'),
         ], Response::HTTP_NOT_FOUND);
     }
 }
