@@ -36,9 +36,7 @@ class SaleUserController extends Controller
         if ($attempt) {
             $user = Auth::guard('sale_user')->user();
             if (!empty($user->deleted_at)) {
-                return response()->error([
-                    'message' => __('message.login_fail'),
-                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                return response()->error('',__('message.login_fail'), Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $statusUser = $user->is_active;
             if($statusUser){
@@ -54,9 +52,7 @@ class SaleUserController extends Controller
                 ], Response::HTTP_OK);
             }
         }
-        return response()->error([
-            'message' => __('message.login_fail'),
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        return response()->error('',__('message.login_fail'), Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function create(SaleUserRequest $request)
@@ -68,9 +64,7 @@ class SaleUserController extends Controller
                 'message' => __('message.sale_user_create_success')
             ]);
         } catch (\Exception $e) {
-            return response()->error([
-                'message' => __('message.error_system')
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->error('',__('message.error_system'), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -83,10 +77,7 @@ class SaleUserController extends Controller
                 'userId' => $userId,
             ], Response::HTTP_OK);
         }
-
-        return response()->error([
-            'message' => __('message.auth_code_error'),
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        return response()->error('',__('message.auth_code_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function logout(Request $request)
@@ -97,9 +88,7 @@ class SaleUserController extends Controller
                 'message' => __('message.logout_success'),
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response()->error([
-                'message' => __('message.logout_fail'),
-            ], Response::HTTP_BAD_REQUEST);
+            return response()->error('',__('message.logout_fail'), Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -112,9 +101,7 @@ class SaleUserController extends Controller
                 'message' =>  __('message.check_mail')
             ]);
         }
-        return response()->error([
-            'message' =>  __('message.error_system')
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        return response()->error('',__('message.error_system'), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function verifyForgotPassword(CheckTokenRequest $request){
@@ -129,10 +116,7 @@ class SaleUserController extends Controller
                 'message' =>  __('message.success_ok'),
             ], Response::HTTP_OK);
         }
-
-        return response()->error([
-            'message' =>  __('message.error_token')
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        return response()->error('',__('message.error_token'), Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function changeForgotPassword(SaleUserPasswordRequest $request){
@@ -145,9 +129,7 @@ class SaleUserController extends Controller
                 'message' => __('message.success_ok'),
             ], Response::HTTP_OK);
         }
-        return response()->error([
-            'message' =>  __('message.error_token')
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        return response()->error('',__('message.error_token'), Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function profile(Request $request){
@@ -160,8 +142,7 @@ class SaleUserController extends Controller
                 'profileUser' => $profileSaleUser
             ], Response::HTTP_OK);
         }
-        return response()->error([
-            'message' => __('message.profile_empty'),
-        ], Response::HTTP_NOT_FOUND);
+
+        return response()->error('',__('message.profile_empty'), Response::HTTP_NOT_FOUND);
     }
 }
