@@ -116,6 +116,20 @@ class SaleUserController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    public function logout(Request $request)
+    {
+        try {
+            auth('sale_user')->logout();
+            return response()->success([
+                'message' => __('message.logout_success'),
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->error([
+                'message' => __('message.logout_fail'),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function forgotPassword(Request $request)
     {
         $messages = array(
