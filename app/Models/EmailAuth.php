@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmailAuth extends Model
 {
     use HasFactory;
-    protected $table = 'emailauth';
+    protected $table = 'email_auth';
     protected $dates = [
         'expiration_at'
     ];

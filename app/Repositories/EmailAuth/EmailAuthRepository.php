@@ -55,7 +55,8 @@ class EmailAuthRepository implements EmailAuthRepositoryInterface
                 try {
                     $saleUser = SaleUser::findOrFail($userId);
                     $saleUser->update([
-                        'password' => $password
+                        'password' => $password,
+                        'is_auth' => SaleUser::USER_AUTH
                     ]);
                     DB::commit();
                     $deleteToken  = $this->deleteToken($token);
@@ -81,5 +82,29 @@ class EmailAuthRepository implements EmailAuthRepositoryInterface
         EmailAuth::where('authcode', '=', $token)->update(['sale_user_id' => $userId]);
 
         return true;
+    }
+
+    public function sendMailForgotPassword($authPurpose, $userId, $email, $expireTime, $timeUnit) {
+        $email = str_replace(' ', '', $email);
+        EmailAuth::where('email', $email)->where('authpurpose', $authPurpose)->delete();
+
+        //create a new token to be sent to the sale user.
+        $emailForgotPass = new EmailAuth();
+        $emailForgotPass->authcode = Str::random(60);
+        $emailForgotPass->authpurpose = $authPurpose;
+        $emailForgotPass->sale_user_id = $userId;
+        $emailForgotPass->email = $email;
+        $emailForgotPass->expiration_at = $this->getExpireDateTime($expireTime, $timeUnit);
+        $emailForgotPass->save();
+
+        $token = $emailForgotPass->authcode;
+        $createdTime = date('Y-m-d H:i:s',strtotime($emailForgotPass->created_at));
+        $expiredDate = $emailForgotPass->expiration_at;
+        return [
+            'token' => $token,
+            'email' => $email,
+            'createtime' => $createdTime,
+            'expiredDate' => $expiredDate
+        ];
     }
 }

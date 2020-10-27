@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\SaleUserRequest;
+use App\Http\Requests\SaleUserPasswordRequest;
 use App\Repositories\SaleUser\SaleUserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -51,7 +52,7 @@ class SaleUserController extends Controller
             $user = Auth::guard('sale_user')->user();
             if (!empty($user->deleted_at)) {
                 return response()->error([
-                    'message' => 'The ID or password is different',
+                    'message' => __('message.login_fail'),
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $statusUser = $user->is_active;
@@ -69,7 +70,7 @@ class SaleUserController extends Controller
             }
         }
         return response()->error([
-            'message' => 'The ID or password is different.',
+            'message' => __('message.login_fail'),
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
@@ -79,12 +80,12 @@ class SaleUserController extends Controller
         try {
             $newUser = $this->_saleUser->create($data['email'], $data['password']);
             return response()->success([
-                'message' => 'Create User Success'
+                'message' => __('message.sale_user_create_success')
             ]);
         } catch (\Exception $e) {
             return response()->error([
-                'message' => 'A system error has occurred.'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR,);
+                'message' => __('message.error_system')
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -105,13 +106,108 @@ class SaleUserController extends Controller
 
         if ($userId = $this->_saleUser->verifyToken($data['token'])) {
             return response()->success([
-                'message' => 'Success to Authenticate',
+                'message' => __('message.auth_code_ok'),
                 'userId' => $userId,
             ], Response::HTTP_OK);
         }
 
         return response()->error([
-            'message' => 'Failed to Authenticate'
+            'message' => __('message.auth_code_error'),
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            auth('sale_user')->logout();
+            return response()->success([
+                'message' => __('message.logout_success'),
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->error([
+                'message' => __('message.logout_fail'),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $messages = array(
+            'email.required' => 'Email is required.',
+            'email.max' => 'The :attribute may not be greater than :max characters.',
+            'email.email' => 'The :attribute must be a valid email address.',
+            'email.regex' => 'The :attribute format is invalid.',
+        );
+        $validator =  Validator::make($request->all(), [
+            'email' => [
+                'bail',
+                'required',
+                'max:191',
+                'email',
+                'regex:/(.*)@miichisoft\.(com|net)/i',
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->error([
+                $validator->errors()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $emailResetPassUser = $request->get('email');
+        $resetPassSaleUser = $this->_saleUser->forgotPassword($emailResetPassUser);
+        if($resetPassSaleUser){
+            return response()->success([
+                'message' =>  __('message.check_mail')
+            ]);
+        }
+        return response()->error([
+            'message' =>  __('message.error_system')
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function verifyForgotPassword(Request $request){
+        $data = $request->all();
+        $validator = Validator::make($data, [
+            'token'   => 'required'
+        ],
+        [
+            'token.required' => 'The :attribute field is required.',
+        ]
+        );
+        if ($validator->fails()) {
+            return response()->error([
+                $validator->errors(),
+            ],Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $token = $data['token'];
+        $authPurpose = Config::get('constants.auth_purpose');
+        $verifyPassSaleUser = $this->_saleUser->verifyForgotPassword($token, $authPurpose);
+        
+        if ($verifyPassSaleUser) {
+            return response()->success([
+                'message' =>  __('message.success_ok'),
+            ], Response::HTTP_OK);
+        }
+
+        return response()->error([
+            'message' =>  __('message.error_token')
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function changeForgotPassword(SaleUserPasswordRequest $request){
+        $password = $request->get('password');
+        $token = $request->get('token');
+        $authPurpose = Config::get('constants.auth_purpose');
+        $changeForgotPassword = $this->_saleUser->changeForgotPassword($token, $password, $authPurpose);
+        if ($changeForgotPassword) {
+            return response()->success([
+                'message' => __('message.success_ok'),
+            ], Response::HTTP_OK);
+        }
+        return response()->error([
+            'message' =>  __('message.error_token')
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

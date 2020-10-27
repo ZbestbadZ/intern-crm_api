@@ -14,4 +14,6 @@ interface EmailAuthRepositoryInterface
     public function deleteToken($token);
 
     public function updateUserToken($token, $userId);
+
+    public function sendMailForgotPassword($authPurpose, $userId, $email, $expireTime, $timeUnit);
 }
