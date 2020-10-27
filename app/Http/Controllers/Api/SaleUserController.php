@@ -10,6 +10,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\SaleUserRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\CheckTokenRequest;
+use App\Http\Requests\FogotPasswordRequest;
 use App\Http\Requests\SaleUserPasswordRequest;
 use App\Repositories\SaleUser\SaleUserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
@@ -27,26 +30,8 @@ class SaleUserController extends Controller
         $this->repository = $saleUser;
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => [
-                'bail',
-                'required',
-                'min:8',
-                'regex:/[a-z]/',      // must contain at least one lowercase letter
-                'regex:/[A-Z]/',      // must contain at least one uppercase letter
-                'regex:/[0-9]/',      // must contain at least one digit
-                'regex:/[@$!%*#?&]/', // must contain a special character
-            ]
-        ]);
-
-        if ($validator->fails()) {
-            return response()->error([
-                $validator->errors(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
         $attempt = Auth::guard('sale_user')->attempt(['email' => request('email'), 'password' => hash( 'sha256', request('password') )]);
         if ($attempt) {
             $user = Auth::guard('sale_user')->user();
@@ -89,20 +74,8 @@ class SaleUserController extends Controller
         }
     }
 
-    public function checkExpiration(Request $request){
+    public function checkExpiration(CheckTokenRequest $request){
         $data = $request->all();
-        $validator = Validator::make($data, [
-            'token'   => 'required'
-        ],
-        [
-            'token.required' => 'Please enter the token.',
-        ]
-        );
-        if ($validator->fails()) {
-            return response()->error([
-                'error' =>  $validator->errors(),
-            ],Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
 
         if ($userId = $this->repository->verifyToken($data['token'])) {
             return response()->success([
@@ -130,30 +103,8 @@ class SaleUserController extends Controller
         }
     }
 
-    public function forgotPassword(Request $request)
+    public function forgotPassword(FogotPasswordRequest $request)
     {
-        $messages = array(
-            'email.required' => 'Email is required.',
-            'email.max' => 'The :attribute may not be greater than :max characters.',
-            'email.email' => 'The :attribute must be a valid email address.',
-            'email.regex' => 'The :attribute format is invalid.',
-        );
-        $validator =  Validator::make($request->all(), [
-            'email' => [
-                'bail',
-                'required',
-                'max:191',
-                'email',
-                'regex:/(.*)@miichisoft\.(com|net)/i',
-            ],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->error([
-                $validator->errors()
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
         $emailResetPassUser = $request->get('email');
         $resetPassSaleUser = $this->repository->forgotPassword($emailResetPassUser);
         if($resetPassSaleUser){
@@ -166,20 +117,8 @@ class SaleUserController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function verifyForgotPassword(Request $request){
+    public function verifyForgotPassword(CheckTokenRequest $request){
         $data = $request->all();
-        $validator = Validator::make($data, [
-            'token'   => 'required'
-        ],
-        [
-            'token.required' => 'The :attribute field is required.',
-        ]
-        );
-        if ($validator->fails()) {
-            return response()->error([
-                $validator->errors(),
-            ],Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
 
         $token = $data['token'];
         $authPurpose = Config::get('constants.auth_purpose');
