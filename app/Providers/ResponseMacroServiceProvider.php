@@ -35,9 +35,10 @@ class ResponseMacroServiceProvider extends ServiceProvider
             ]);
         });
 
-        Response::macro('error', function ($errors, $statusCode = 400) use ($class) {
+        Response::macro('error', function ($errors = null, $message = null,  $statusCode = 400) use ($class) {
             return response()->json([
                 'success' => $class::FAILURE_NUMER,
+                'message' => $message,
                 'errors' => $errors
             ], $statusCode);
         });

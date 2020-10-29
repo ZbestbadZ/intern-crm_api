@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class SaleUserPasswordRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +25,20 @@ class SaleUserPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'token' => 'required',
+            'email' => [
+                'bail',
+                'required',
+                'email',
+                'max:191',
+            ],
             'password' => [
                 'bail',
                 'required',
                 'min:8',
-                'max:191',
                 'regex:/[a-z]/',      // must contain at least one lowercase letter
                 'regex:/[A-Z]/',      // must contain at least one uppercase letter
                 'regex:/[0-9]/',      // must contain at least one digit
                 'regex:/[@$!%*#?&]/', // must contain a special character
-                'confirmed',
             ]
         ];
     }

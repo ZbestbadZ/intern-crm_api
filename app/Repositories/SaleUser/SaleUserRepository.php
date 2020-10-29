@@ -49,12 +49,10 @@ class SaleUserRepository implements SaleUserRepositoryInterface
         }
         catch (\Exception $e) {
             Log::error($e);
+            return false;
         }
 
-        return [
-            'userid' => $newUser->id,
-            'expiredDate' => $emailAuth['expiredDate']
-        ];
+        return $newUser->id;
     }
 
     public function verifyToken($token){
