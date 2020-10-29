@@ -31,13 +31,13 @@ class AuthApiMiddleware
                 return response()->error(['message' => 'Unauthorised'], Response::HTTP_UNAUTHORIZED);
             }
         } catch(\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return response()->error(['message'=>'Login failed'], Response::HTTP_BAD_REQUEST);
+            return response()->error('',['message'=>'Login failed'], Response::HTTP_BAD_REQUEST);
         } catch (\Exception $e) {
             if ($e->getMessage() === 'A token is required') {
-                return response()->error(['message'=>'Token required'], Response::HTTP_RESET_CONTENT);
+                return response()->error('',['message'=>'Token required'], Response::HTTP_RESET_CONTENT);
             }
             Log::error($e);
-            return response()->error(['message'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->error('',['message'=>$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

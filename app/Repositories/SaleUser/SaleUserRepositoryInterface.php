@@ -14,7 +14,4 @@ interface SaleUserRepositoryInterface
     public function verifyForgotPassword($token, $authPurpose);
 
     public function changeForgotPassword($token, $password, $authPurpose);
-
-    public function profile($id, $email);
-
 }

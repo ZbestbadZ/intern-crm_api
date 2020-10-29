@@ -47,13 +47,13 @@ class SaleUserController extends Controller
                     'is_active' => $user->is_active,
                 ];
                 $token = JWTAuth::customClaims($payloadable)->fromUser($user);
-                $profileSaleUser = $this->repository->profile($user->id, $user->email);
-                $avatarSaleUser = !empty($profileSaleUser) ? $profileSaleUser->profile['avatar'] : '';
-                $fullnameSaleUser = !empty($profileSaleUser) ? $profileSaleUser->profile['full_name'] : '';
+                $profileSaleUser = Auth::user()->profile()->first();
+                $avatarSaleUser = !empty($profileSaleUser) ? $profileSaleUser->avatar: '';
+                $fullNameSaleUser = !empty($profileSaleUser) ? $profileSaleUser->full_name : '';
                 return response()->success([
                     'token' => $token,
                     'avatar' => $avatarSaleUser,
-                    'name' => $fullnameSaleUser,
+                    'name' => $fullNameSaleUser,
                 ], Response::HTTP_OK);
             }
         }
@@ -65,11 +65,13 @@ class SaleUserController extends Controller
         $data = $request->all();
         try {
             $newUser = $this->repository->create($data['email'], $data['password']);
-            return response()->success([
-                'message' => __('message.sale_user_create_success')
-            ]);
+            if($newUser){
+                return response()->success([
+                    'message' => __('message.sale_user_create_success'),
+                ]);
+            }
         } catch (\Exception $e) {
-            return response()->error('',__('message.error_system'), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->error($e->getMessage(),__('message.error_system'), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -93,7 +95,7 @@ class SaleUserController extends Controller
                 'message' => __('message.logout_success'),
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response()->error('',__('message.logout_fail'), Response::HTTP_BAD_REQUEST);
+            return response()->error($e->getMessage(),__('message.logout_fail'), Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -138,13 +140,10 @@ class SaleUserController extends Controller
     }
 
     public function profile(Request $request){
-        $infoSaleUser = Auth::user();
-        $id = $infoSaleUser->id;
-        $email = $infoSaleUser->email;
-        $profileSaleUser = $this->repository->profile($id, $email);
-        if(!empty($profileSaleUser)){
+        $infoSaleUser = Auth::user()->profile()->first();
+        if(!empty($infoSaleUser)){
             return response()->success([
-                'profileUser' => $profileSaleUser
+                'profile' => $infoSaleUser
             ], Response::HTTP_OK);
         }
 

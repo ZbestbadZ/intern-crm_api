@@ -49,12 +49,10 @@ class SaleUserRepository implements SaleUserRepositoryInterface
         }
         catch (\Exception $e) {
             Log::error($e);
+            return false;
         }
 
-        return [
-            'userid' => $newUser->id,
-            'expiredDate' => $emailAuth['expiredDate']
-        ];
+        return $newUser->id;
     }
 
     public function verifyToken($token){
@@ -130,15 +128,5 @@ class SaleUserRepository implements SaleUserRepositoryInterface
             Log::error($e);
             return false;
         }
-    }
-
-    public function profile($id, $email){
-        $profileSaleUser = SaleUser::where('id', $id)->where('email', $email)
-                            ->with('profile')
-                            ->first();
-        if(!empty($profileSaleUser['profile'])){
-            return  $profileSaleUser;
-        }
-        return null;
     }
 }

@@ -30,37 +30,6 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Log database queries and bindings to the standard log
-     * Only when in debug mode and not running unit tests
-     */
-    protected function bootDBLogger()
-    {
-        if (config('app.debug_log_queries')) {
-            DB::listen(function ($query) {
-                $sql = $query->sql;
-               foreach ($query->bindings as $binding) {
-                   if (is_string($binding)) {
-                       $binding = "'{$binding}'";
-                   } elseif ($binding === null) {
-                       $binding = 'NULL';
-                   } elseif ($binding instanceof Carbon) {
-                       $binding = "'{$binding->toDateTimeString()}'";
-                   } elseif ($binding instanceof DateTime) {
-                       $binding = "'{$binding->format('Y-m-d H:i:s')}'";
-                   }
-
-                   $sql = preg_replace("/\?/", $binding, $sql, 1);
-               }
-
-               Log::channel('queries')->debug('SQL', [
-                    'sql' => $sql, 
-                    'time' => "$query->time ms"
-                ]);
-            });
-        }
-    }
-
-    /**
      * Bootstrap any application services.
      *
      * @return void
@@ -68,6 +37,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        $this->bootDBLogger();
     }
 }
