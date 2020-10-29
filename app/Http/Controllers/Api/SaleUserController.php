@@ -47,8 +47,13 @@ class SaleUserController extends Controller
                     'is_active' => $user->is_active,
                 ];
                 $token = JWTAuth::customClaims($payloadable)->fromUser($user);
+                $profileSaleUser = $this->repository->profile($user->id, $user->email);
+                $avatarSaleUser = !empty($profileSaleUser) ? $profileSaleUser->profile['avatar'] : '';
+                $fullnameSaleUser = !empty($profileSaleUser) ? $profileSaleUser->profile['full_name'] : '';
                 return response()->success([
                     'token' => $token,
+                    'avatar' => $avatarSaleUser,
+                    'name' => $fullnameSaleUser,
                 ], Response::HTTP_OK);
             }
         }
