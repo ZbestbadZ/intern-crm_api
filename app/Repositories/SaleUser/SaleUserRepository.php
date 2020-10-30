@@ -41,7 +41,7 @@ class SaleUserRepository implements SaleUserRepositoryInterface
         $this->_emailAuth->updateUserToken($emailAuth['token'], $newUser->id);
 
         try {
-            $urlMail = config('app.domain_front_end');
+            $urlMail =  !empty(request()->headers->get('Origin')) ? request()->headers->get('Origin') : '';
             $dataSendMail['verifyUrl'] = $urlMail . '/verifyUser?token='. $emailAuth['token'];
             $dataSendMail['mailUser'] = $email;
             $dataSendMail['subject'] = __('message.subject_mail_create_sale_user');
@@ -74,7 +74,7 @@ class SaleUserRepository implements SaleUserRepositoryInterface
         $emailForgotPass = $this->_emailAuth->sendMailForgotPassword($authPurpose['forgot_password'], $saleUser->id, $saleUser->email, 30 , 'i');
         if($emailForgotPass){
             try {
-                $urlMail = config('app.domain_front_end');
+                $urlMail = !empty(request()->headers->get('Origin')) ? request()->headers->get('Origin') : '';
                 $dataSendMail['verifyForgotPass'] = isset($emailForgotPass['token']) ? $urlMail . '/verifyForgotPassword?token='. $emailForgotPass['token'] : '';
                 $dataSendMail['mailUser'] = isset($emailForgotPass['email']) ? $emailForgotPass['email'] : '';
                 $dataSendMail['subject'] = __('message.subject_mail_forgot_password');
