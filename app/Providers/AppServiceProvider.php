@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
         $repositories = [
             'SaleUser\SaleUserRepositoryInterface' => 'SaleUser\SaleUserRepository',
             'EmailAuth\EmailAuthRepositoryInterface' => 'EmailAuth\EmailAuthRepository',
+            'Orbit\OrbitRepositoryInterface' => 'Orbit\OrbitRepository',
+            'Scale\ScaleRepositoryInterface' => 'Scale\ScaleRepository',
+            'CharterCapital\CharterCapitalRepositoryInterface' => 'CharterCapital\CharterCapitalRepository',
+            'Category\CategoryRepositoryInterface' => 'Category\CategoryRepository',
         ];
 
         foreach ($repositories as $key=>$val){

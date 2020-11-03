@@ -17,8 +17,8 @@ class OrbitController extends Controller
         $this->repository = $orbit;
     }
 
-    public function index(Request $request){
-
+    public function index(){
+        $dataListOrbit = $this->repository->index();
+        return response()->success($dataListOrbit);
     }
-
 }

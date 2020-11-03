@@ -10,7 +10,10 @@ use Carbon\Carbon;
 class OrbitRepository implements OrbitRepositoryInterface
 {
     public function index() {
-        
+        $dataListOrbit = Orbit::select('id','name','description')->get();
+        return [
+            'list_orbit ' => $dataListOrbit
+        ];
     }
 
   

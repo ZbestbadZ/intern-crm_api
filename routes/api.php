@@ -17,9 +17,12 @@ Route::namespace('Api')->group(function () {
     Route::group(['middleware' => 'authApi'], function () {
         Route::prefix('sale/user')->group(function () {
             Route::post('/profile', 'SaleUserController@profile');
-            Route::get('/orbit', 'OrbitController@index');
         });
 
+        Route::get('/orbit', 'OrbitController@index');
+        Route::get('/charter_capital', 'CharterCapitalController@index');
+        Route::get('/scale', 'ScaleController@index');
+        Route::get('/category', 'CategoryController@index');
 
     });
 });
