@@ -40,7 +40,6 @@ class ChangeColumsTableCompanies extends Migration
             $table->dropColumn('scale_id');
             $table->dropColumn('charter_capital_id');
             $table->dropColumn('revenue');
-            $table->dropColumn('orbit_tags');
             $table->dropColumn('univalence');
         });
     }
