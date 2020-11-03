@@ -32,7 +32,7 @@ class ChangeColumsTableCompanies extends Migration
      */
     public function down()
     {
-        Schema::table('emailauth', function (Blueprint $table) {
+        Schema::table('m_companies', function (Blueprint $table) {
             $table->dropColumn('name_jp');
             $table->dropColumn('name_vn');
             $table->dropColumn('category_id');
