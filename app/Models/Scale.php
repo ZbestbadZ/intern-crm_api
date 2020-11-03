@@ -11,6 +11,10 @@ class Scale extends Model
 
     protected $table = 'm_scale';
 
+    protected $appends = ['label', 'value'];
+
+    protected $visible = ['id', 'label', 'value'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,4 +23,15 @@ class Scale extends Model
     protected $fillable = [
         'id', 'name'
     ];
+
+
+    public function getLabelAttribute()
+    {
+        return $this->name;
+    }
+
+    public function getValueAttribute()
+    {
+        return $this->id;
+    }
 }

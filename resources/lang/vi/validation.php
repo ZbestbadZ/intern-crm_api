@@ -146,6 +146,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'phone' => 'Please enter the phone number correctly.',
+        'fax' => 'Please enter the fax number correctly.',
+    ],
 
 ];

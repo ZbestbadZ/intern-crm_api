@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
             'Scale\ScaleRepositoryInterface' => 'Scale\ScaleRepository',
             'CharterCapital\CharterCapitalRepositoryInterface' => 'CharterCapital\CharterCapitalRepository',
             'Category\CategoryRepositoryInterface' => 'Category\CategoryRepository',
+            'Companies\CompaniesRepositoryInterface' => 'Companies\CompaniesRepository',
         ];
 
         foreach ($repositories as $key=>$val){

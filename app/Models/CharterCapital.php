@@ -11,6 +11,10 @@ class CharterCapital extends Model
 
     protected $table = 'm_charter_capital';
 
+    protected $appends = ['label', 'value'];
+
+    protected $visible = ['id', 'label', 'value'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,4 +23,14 @@ class CharterCapital extends Model
     protected $fillable = [
         'id', 'name'
     ];
+
+    public function getLabelAttribute()
+    {
+        return $this->name;
+    }
+
+    public function getValueAttribute()
+    {
+        return $this->id;
+    }
 }

@@ -24,5 +24,9 @@ Route::namespace('Api')->group(function () {
         Route::get('/scale', 'ScaleController@index');
         Route::get('/category', 'CategoryController@index');
 
+        Route::prefix('companies')->group(function () {
+            Route::post('/create', 'CompaniesController@create');
+        });
+
     });
 });

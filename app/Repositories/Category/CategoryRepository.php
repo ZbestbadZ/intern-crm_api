@@ -8,9 +8,22 @@ use App\Repositories\Category\CategoryRepositoryInterface;
 class CategoryRepository implements CategoryRepositoryInterface
 {
     public function index() {
-        $dataListCategory = Category::select('id', 'name')->with('children:id,name,parent_id')->where('parent_id', Category::PARENT_CATEGORY)->get();
+        $dataListCategory = Category::with('options')->where('parent_id', Category::PARENT_CATEGORY)->get();
+        if(!empty($dataListCategory)){
+            foreach($dataListCategory as $v){
+               if($v['options']->count() == 0){
+                    $v['options'][] = [
+                        'id' => $v['id'],
+                        'label' => $v['label'],
+                        'value' => $v['value'],
+                    ];
+               }
+            }
+        }
         return [
             'list_category ' => $dataListCategory
         ];
     }
+
+
 }
