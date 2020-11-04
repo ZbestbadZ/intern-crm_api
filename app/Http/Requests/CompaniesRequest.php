@@ -39,7 +39,8 @@ class CompaniesRequest extends FormRequest
             'category_id' => [
                 'bail',
                 'required',
-                'numeric'
+                'numeric',
+                'exists:m_category,id'
             ], 
             'found_at' => [
                 'bail',
@@ -48,16 +49,24 @@ class CompaniesRequest extends FormRequest
                 'date_format:Y-m-d H:i:s'
             ], 
             'scale_id' => [
+                'bail',
                 'nullable',
                 'numeric',
+                'exists:m_scale,id'
             ], 
             'revenue' => [
+                'bail',
                 'nullable',
                 'numeric',
+                'min:0',
+                'regex:/^\s*(?=.*[0-9])\d*(?:\.\d{1,2})?\s*$/'
             ], 
             'univalence' => [
+                'bail',
                 'nullable',
                 'numeric',
+                'min:0',
+                'regex:/^\s*(?=.*[0-9])\d*(?:\.\d{1,2})?\s*$/'
             ], 
             'website' => [
                 'bail',
@@ -66,19 +75,25 @@ class CompaniesRequest extends FormRequest
                 'regex: /^((?:https?\:\/\/|www\.)(?:[-a-z0-9]+\.)*[-a-z0-9]+.*)$/'
             ], 
             'address' => [
+                'bail',
                 'nullable',
                 'max:255',
             ], 
             'phone' => [
+                'bail',
                 'nullable',
                 new CheckTel(__('validation.attributes.phone')),
             ], 
             'fax' => [
+                'bail',
                 'nullable',
                 new CheckTel(__('validation.attributes.fax')),
             ], 
             'orbit_id' => [
+                'bail',
                 'nullable',
+                'numeric_array',
+                'exists:m_orbit,id'
             ], 
             'description' => [
                 'nullable',

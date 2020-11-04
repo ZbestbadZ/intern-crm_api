@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\CompaniesRequest;
 use App\Repositories\Companies\CompaniesRepositoryInterface;
-
-
+use Illuminate\Http\Response;
 class CompaniesController extends Controller
 {
     protected $repository;
@@ -22,6 +21,11 @@ class CompaniesController extends Controller
     public function create(CompaniesRequest $request){
         $data = $request->all();
         $dataCreateCompanies = $this->repository->create($data);
-        return response()->success($dataCreateCompanies);
+        if($dataCreateCompanies){
+            return response()->success([
+                'id' => $dataCreateCompanies
+            ]);
+        }
+        return response()->error('', __('message.error_system'), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

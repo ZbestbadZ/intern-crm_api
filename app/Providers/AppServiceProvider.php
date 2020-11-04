@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 use Carbon\Carbon;
-
 use Illuminate\Support\Facades\Event;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -42,5 +42,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(255);
+
+        \Validator::extend('numeric_array', function($attribute, $values, $parameters) {
+            if(! is_array($values)) {
+                return false;
+            }
+
+            foreach($values as $v) {
+                if(! is_numeric($v)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 }
