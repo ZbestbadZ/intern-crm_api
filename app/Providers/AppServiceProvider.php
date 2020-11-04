@@ -22,10 +22,7 @@ class AppServiceProvider extends ServiceProvider
         $repositories = [
             'SaleUser\SaleUserRepositoryInterface' => 'SaleUser\SaleUserRepository',
             'EmailAuth\EmailAuthRepositoryInterface' => 'EmailAuth\EmailAuthRepository',
-            'Orbit\OrbitRepositoryInterface' => 'Orbit\OrbitRepository',
-            'Scale\ScaleRepositoryInterface' => 'Scale\ScaleRepository',
-            'CharterCapital\CharterCapitalRepositoryInterface' => 'CharterCapital\CharterCapitalRepository',
-            'Category\CategoryRepositoryInterface' => 'Category\CategoryRepository',
+            'Domain\DomainRepositoryInterface' => 'Domain\DomainRepository',
             'Companies\CompaniesRepositoryInterface' => 'Companies\CompaniesRepository',
         ];
 

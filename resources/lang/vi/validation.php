@@ -118,6 +118,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
     "numeric_array" => "The :attribute field should be an array of numeric values",
+    "enum_value" => "The :attribute format is invalid.",
 
     /*
     |--------------------------------------------------------------------------

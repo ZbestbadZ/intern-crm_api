@@ -5,6 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Rules\CheckTel;
+use App\Enums\CategoryType;
+use App\Enums\ScaleType;
+use App\Enums\FondsType;
 
 class CompaniesRequest extends FormRequest
 {
@@ -36,23 +39,26 @@ class CompaniesRequest extends FormRequest
                 'required',
                 'max:255',
             ],
-            'category_id' => [
-                'bail',
-                'required',
-                'numeric',
-                'exists:m_category,id'
-            ], 
-            'found_at' => [
+            'established_at' => [
                 'bail',
                 'nullable',
                 'date',
-                'date_format:Y-m-d H:i:s'
+                'date_format:Y-m-d'
             ], 
-            'scale_id' => [
+            'category_enum' => [
+                'bail',
+                'required',
+                'enum_value:'.CategoryType::class.',false',
+            ], 
+            'scale_enum' => [
                 'bail',
                 'nullable',
-                'numeric',
-                'exists:m_scale,id'
+                'enum_value:'.ScaleType::class.',false',
+            ], 
+            'fonds_enum' => [
+                'bail',
+                'nullable',
+                'enum_value:'.FondsType::class.',false',
             ], 
             'revenue' => [
                 'bail',
@@ -61,7 +67,7 @@ class CompaniesRequest extends FormRequest
                 'min:0',
                 'regex:/^\s*(?=.*[0-9])\d*(?:\.\d{1,2})?\s*$/'
             ], 
-            'univalence' => [
+            'unit_price' => [
                 'bail',
                 'nullable',
                 'numeric',
@@ -89,11 +95,11 @@ class CompaniesRequest extends FormRequest
                 'nullable',
                 new CheckTel(__('validation.attributes.fax')),
             ], 
-            'orbit_id' => [
+            'domain_id' => [
                 'bail',
                 'nullable',
                 'numeric_array',
-                'exists:m_orbit,id'
+                'exists:m_domains,id'
             ], 
             'description' => [
                 'nullable',

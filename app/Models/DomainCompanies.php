@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrbitCompanies extends Model
+class DomainCompanies extends Model
 {
     use HasFactory;
 
-    protected $table = 't_orbit_companies';
+    protected $table = 't_domains_companies';
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +17,6 @@ class OrbitCompanies extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'orbit_id', 'companies_id'
+        'id', 'domains_id', 'companies_id'
     ];
 }

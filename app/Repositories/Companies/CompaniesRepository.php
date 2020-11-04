@@ -18,23 +18,23 @@ class CompaniesRepository implements CompaniesRepositoryInterface
             $newCompanies = new Companies();
             $newCompanies->name_jp            = $data['name_jp'];
             $newCompanies->name_vn            = $data['name_vn'];
-            $newCompanies->category_id        = $data['category_id'];
+            $newCompanies->category_enum      = $data['category_enum'];
             $newCompanies->phone              = isset($data['phone']) ? $data['phone'] : null;
             $newCompanies->fax                = isset($data['fax']) ? $data['fax'] : null;
             $newCompanies->website            = isset($data['website']) ? $data['website'] : null;
             $newCompanies->address            = isset($data['address']) ? $data['address'] : null;
             $newCompanies->description        = isset($data['description']) ? $data['description'] : null;
-            $newCompanies->found_at           = isset($data['found_at']) ? $data['found_at'] : null;
-            $newCompanies->scale_id           = isset($data['scale_id']) ? $data['scale_id'] : null;
-            $newCompanies->charter_capital_id = isset($data['charter_capital_id']) ? $data['charter_capital_id'] : null;
+            $newCompanies->established_at     = isset($data['established_at']) ? $data['established_at'] : null;
+            $newCompanies->scale_enum         = isset($data['scale_enum']) ? $data['scale_enum'] : null;
+            $newCompanies->fonds_enum         = isset($data['fonds_enum']) ? $data['fonds_enum'] : null;
             $newCompanies->revenue            = isset($data['revenue']) ? $data['revenue'] : null;
-            $newCompanies->univalence         = isset($data['univalence']) ? $data['univalence'] : null;
+            $newCompanies->unit_price         = isset($data['unit_price']) ? $data['unit_price'] : null;
             $newCompanies->save();
            
             // process create orbit with company
-            $dataOrbit = isset($data['orbit_id']) ? $data['orbit_id'] : '';
-            if(!empty($dataOrbit)){
-                $newCompanies->orbit()->attach($dataOrbit);
+            $dataDomain = isset($data['domain_id']) ? $data['domain_id'] : '';
+            if(!empty($dataDomain)){
+                $newCompanies->domains()->attach($dataDomain);
             }
 
             // process create sale with company

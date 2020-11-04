@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Scale extends Model
+class Domain extends Model
 {
     use HasFactory;
 
-    protected $table = 'm_scale';
+    protected $table = 'm_domains';
 
     protected $appends = ['label', 'value'];
 
@@ -21,9 +21,8 @@ class Scale extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name'
+        'id', 'name', 'description'
     ];
-
 
     public function getLabelAttribute()
     {
@@ -33,5 +32,10 @@ class Scale extends Model
     public function getValueAttribute()
     {
         return $this->id;
+    }
+    
+    public function companies()
+    {
+        return $this->belongsToMany(Companies::class, 't_domains_companies',  'domains_id', 'companies_id');
     }
 }

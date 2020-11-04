@@ -10,7 +10,7 @@ class Companies extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'm_companies';
+    protected $table = 't_companies';
     protected $primaryKey = 'id';
 
     // public $incrementing = false; 
@@ -20,12 +20,12 @@ class Companies extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category_id', 'found_at', 'scale_id', 'charter_capital_id', 'revenue', 'univalence', 
+        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category_enum', 'established_at', 'scale_enum', 'fonds_enum', 'revenue', 'unit_price', 
     ]; 
 
-    public function orbit()
+    public function domains()
     {
-        return $this->belongsToMany(Orbit::class, 't_orbit_companies', 'companies_id', 'orbit_id');
+        return $this->belongsToMany(Domain::class, 't_domains_companies', 'companies_id', 'domains_id');
     }
 
     public function sale()
