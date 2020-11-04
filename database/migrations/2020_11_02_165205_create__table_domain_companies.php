@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableCharterCapital extends Migration
+class CreateTableDomainCompanies extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateTableCharterCapital extends Migration
      */
     public function up()
     {
-        Schema::create('m_charter_capital', function (Blueprint $table) {
+        Schema::create('t_domains_companies', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->integer('domains_id');
+            $table->integer('companies_id');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateTableCharterCapital extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_charter_capital');
+        Schema::dropIfExists('t_domains_companies');
     }
 }

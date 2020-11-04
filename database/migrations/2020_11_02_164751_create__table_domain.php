@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableCategory extends Migration
+class CreateTableDomain extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateTableCategory extends Migration
      */
     public function up()
     {
-        Schema::create('m_category', function (Blueprint $table) {
+        Schema::create('m_domains', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('parent_id');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateTableCategory extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_category');
+        Schema::dropIfExists('m_domains');
     }
 }

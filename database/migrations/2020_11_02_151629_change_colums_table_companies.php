@@ -13,15 +13,15 @@ class ChangeColumsTableCompanies extends Migration
      */
     public function up()
     {
-        Schema::table('m_companies', function (Blueprint $table) {
+        Schema::table('t_companies', function (Blueprint $table) {
             $table->renameColumn('name', 'name_jp');
             $table->string('name_vn');
-            $table->integer('category_id')->after('address')->comment('ID table Category');
-            $table->timestamp('found_at')->after('address')->nullable()->comment('Found Date');
-            $table->integer('scale_id')->after('address')->nullable()->comment('ID table scale ');
-            $table->integer('charter_capital_id')->after('address')->nullable()->comment('ID table Charter Capital');
-            $table->decimal('revenue', 12, 2)->after('address')->nullable()->comment('Revenue');
-            $table->decimal('univalence', 12, 2)->after('address')->nullable()->comment('Univalence');
+            $table->integer('category_enum')->comment('Companies Category');
+            $table->timestamp('established_at')->nullable()->comment('Established Date');
+            $table->integer('scale_enum')->nullable()->comment('Companies Scale ');
+            $table->integer('fonds_enum')->nullable()->comment('Companies Fonds');
+            $table->decimal('revenue', 12, 2)->nullable()->comment('Revenue');
+            $table->decimal('unit_price', 12, 2)->nullable()->comment('Univalence');
         });
     }
 
@@ -32,15 +32,15 @@ class ChangeColumsTableCompanies extends Migration
      */
     public function down()
     {
-        Schema::table('m_companies', function (Blueprint $table) {
-            $table->dropColumn('name_jp');
+        Schema::table('t_companies', function (Blueprint $table) {
+            $table->renameColumn('name_jp', 'name');
             $table->dropColumn('name_vn');
-            $table->dropColumn('category_id');
-            $table->dropColumn('found_at');
-            $table->dropColumn('scale_id');
-            $table->dropColumn('charter_capital_id');
+            $table->dropColumn('category_enum');
+            $table->dropColumn('established_at');
+            $table->dropColumn('scale_enum');
+            $table->dropColumn('fonds_enum');
             $table->dropColumn('revenue');
-            $table->dropColumn('univalence');
+            $table->dropColumn('unit_price');
         });
     }
 }
