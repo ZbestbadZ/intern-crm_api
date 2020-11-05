@@ -28,8 +28,6 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
-    'domain_front_end' => env('DOMAIN_FRONT_END', 'http://localhost'),
-
     'debug_log_queries' => env('DEBUG_LOG_QUERIES', false),
 
     /*
