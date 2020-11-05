@@ -13,10 +13,10 @@ class CreateTableDomainCompanies extends Migration
      */
     public function up()
     {
-        Schema::create('t_domains_companies', function (Blueprint $table) {
+        Schema::create('t_company_domains', function (Blueprint $table) {
             $table->id();
-            $table->integer('domains_id');
-            $table->integer('companies_id');
+            $table->integer('domain_id');
+            $table->integer('company_id');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateTableDomainCompanies extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('t_domains_companies');
+        Schema::dropIfExists('t_company_domains');
     }
 }

@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DomainCompanies extends Model
+class CompanyDomain extends Model
 {
     use HasFactory;
 
-    protected $table = 't_domains_companies';
+    protected $table = 't_company_domains';
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +17,6 @@ class DomainCompanies extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'domains_id', 'companies_id'
+        'id', 'domain_id', 'company_id'
     ];
 }

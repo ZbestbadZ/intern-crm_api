@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\CompaniesRequest;
+use App\Http\Requests\CompanyRequest;
 use App\Repositories\Companies\CompaniesRepositoryInterface;
 use Illuminate\Http\Response;
 class CompaniesController extends Controller
@@ -18,7 +18,7 @@ class CompaniesController extends Controller
         $this->repository = $companies;
     }
 
-    public function create(CompaniesRequest $request){
+    public function create(CompanyRequest $request){
         $data = $request->all();
         $dataCreateCompanies = $this->repository->create($data);
         if($dataCreateCompanies){

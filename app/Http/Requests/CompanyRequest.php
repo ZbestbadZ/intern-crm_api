@@ -9,7 +9,7 @@ use App\Enums\CategoryType;
 use App\Enums\ScaleType;
 use App\Enums\FondsType;
 
-class CompaniesRequest extends FormRequest
+class CompanyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -45,17 +45,17 @@ class CompaniesRequest extends FormRequest
                 'date',
                 'date_format:Y-m-d'
             ], 
-            'category_enum' => [
+            'category' => [
                 'bail',
                 'required',
                 'enum_value:'.CategoryType::class.',false',
             ], 
-            'scale_enum' => [
+            'scale' => [
                 'bail',
                 'nullable',
                 'enum_value:'.ScaleType::class.',false',
             ], 
-            'fonds_enum' => [
+            'fonds' => [
                 'bail',
                 'nullable',
                 'enum_value:'.FondsType::class.',false',

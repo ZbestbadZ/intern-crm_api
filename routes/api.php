@@ -21,7 +21,7 @@ Route::namespace('Api')->group(function () {
 
         Route::get('/domains', 'OrbitController@index');
 
-        Route::prefix('companies')->group(function () {
+        Route::prefix('company')->group(function () {
             Route::post('/create', 'CompaniesController@create');
         });
 

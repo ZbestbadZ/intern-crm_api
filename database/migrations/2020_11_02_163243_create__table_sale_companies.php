@@ -16,7 +16,7 @@ class CreateTableSaleCompanies extends Migration
         Schema::create('t_sale_companies', function (Blueprint $table) {
             $table->id();
             $table->integer('sale_user_id');
-            $table->integer('companies_id');
+            $table->integer('company_id');
             $table->timestamps();
         });
     }

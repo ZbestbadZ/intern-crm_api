@@ -36,6 +36,6 @@ class Domain extends Model
     
     public function companies()
     {
-        return $this->belongsToMany(Companies::class, 't_domains_companies',  'domains_id', 'companies_id');
+        return $this->belongsToMany(Companies::class, 't_company_domains',  'domain_id', 'company_id');
     }
 }
