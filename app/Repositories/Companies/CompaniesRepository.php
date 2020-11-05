@@ -7,7 +7,9 @@ use App\Models\Companies;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
+use App\Jobs\SendMailDeleteCompany;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 
 class CompaniesRepository implements CompaniesRepositoryInterface
 {
@@ -37,6 +39,16 @@ class CompaniesRepository implements CompaniesRepositoryInterface
             })
             ->findOrFail($id);
             $deleteCompany->delete();
+
+            // send mail admin
+            $profileSaleUser = Auth::user()->profile()->first();
+            $fullNameSaleUser = !empty($profileSaleUser) ? $profileSaleUser->full_name : '';
+            $dataSendMail['mailSaleAdmin'] = Config::get('constants.mail_admin');
+            $dataSendMail['nameCompany'] = isset($deleteCompany) ? $deleteCompany['name_jp'] : '';
+            $dataSendMail['time'] = Carbon::now();
+            $dataSendMail['nameUserDelete'] = $fullNameSaleUser;
+            $dataSendMail['subject'] = __('message.company.subject_mail_delete_company');
+            dispatch((new SendMailDeleteCompany($dataSendMail))->onQueue('sendMailDeleteCompany'));
             DB::commit();
             return true;
         } catch (\Exception $e) {
