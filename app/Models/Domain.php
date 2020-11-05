@@ -12,7 +12,21 @@ class Domain extends Model
 
     protected $fillable = [
         'id', 'name', 'description'
-    ]; 
+    ];
+
+    protected $appends = ['label', 'value'];
+
+    protected $visible = ['id', 'label', 'value'];
+
+    public function getLabelAttribute()
+    {
+        return $this->name;
+    }
+
+    public function getValueAttribute()
+    {
+        return $this->id;
+    }
 
     public function companies()
     {
