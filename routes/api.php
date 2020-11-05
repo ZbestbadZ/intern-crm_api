@@ -19,7 +19,7 @@ Route::namespace('Api')->group(function () {
             Route::post('/profile', 'SaleUserController@profile');
         });
 
-        Route::get('/domains', 'OrbitController@index');
+        Route::get('/domains', 'DomainController@index');
 
         Route::prefix('company')->group(function () {
             Route::post('/create', 'CompaniesController@create');
