@@ -19,5 +19,10 @@ Route::namespace('Api')->group(function () {
             Route::post('/profile', 'SaleUserController@profile');
         });
 
+
+        Route::prefix('companies')->group(function () {
+            Route::get('/list', 'CompaniesController@list');
+        });
+
     });
 });
