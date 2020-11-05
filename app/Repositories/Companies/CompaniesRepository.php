@@ -16,15 +16,15 @@ class CompaniesRepository implements CompaniesRepositoryInterface
             $newCompanies = new Companies();
             $newCompanies->name_jp            = $data['name_jp'];
             $newCompanies->name_vn            = $data['name_vn'];
-            $newCompanies->category_enum      = $data['category_enum'];
+            $newCompanies->category           = $data['category'];
             $newCompanies->phone              = isset($data['phone']) ? $data['phone'] : null;
             $newCompanies->fax                = isset($data['fax']) ? $data['fax'] : null;
             $newCompanies->website            = isset($data['website']) ? $data['website'] : null;
             $newCompanies->address            = isset($data['address']) ? $data['address'] : null;
             $newCompanies->description        = isset($data['description']) ? $data['description'] : null;
             $newCompanies->established_at     = isset($data['established_at']) ? $data['established_at'] : null;
-            $newCompanies->scale_enum         = isset($data['scale_enum']) ? $data['scale_enum'] : null;
-            $newCompanies->fonds_enum         = isset($data['fonds_enum']) ? $data['fonds_enum'] : null;
+            $newCompanies->scale              = isset($data['scale']) ? $data['scale'] : null;
+            $newCompanies->fonds              = isset($data['fonds']) ? $data['fonds'] : null;
             $newCompanies->revenue            = isset($data['revenue']) ? $data['revenue'] : null;
             $newCompanies->unit_price         = isset($data['unit_price']) ? $data['unit_price'] : null;
             $newCompanies->save();
