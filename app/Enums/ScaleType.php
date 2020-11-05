@@ -4,14 +4,6 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-/**
- * @method static static ScaleLevelOne()
- * @method static static ScaleLevelTwo()
- * @method static static ScaleLevelThree()
- * @method static static ScaleLevelFour()
- * @method static static ScaleLevelFive()
- * @method static static ScaleLevelSix()
- */
 final class ScaleType extends Enum
 {
     const ScaleLevelOne   = "1-10";
