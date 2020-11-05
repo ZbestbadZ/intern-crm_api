@@ -19,16 +19,16 @@ class Companies extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category_enum', 'established_at', 'scale_enum', 'fonds_enum', 'revenue', 'unit_price', 
+        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category', 'established_at', 'scale', 'fonds', 'revenue', 'unit_price', 
     ]; 
 
     public function domains()
     {
-        return $this->belongsToMany(Domain::class, 't_domains_companies', 'companies_id', 'domains_id');
+        return $this->belongsToMany(Domain::class, 't_company_domains', 'company_id', 'domain_id');
     }
 
     public function sales()
     {
-        return $this->belongsToMany(SaleUser::class, 't_sale_companies', 'companies_id', 'sale_user_id');
+        return $this->belongsToMany(SaleUser::class, 't_sale_company', 'company_id', 'sale_user_id');
     }
 }
