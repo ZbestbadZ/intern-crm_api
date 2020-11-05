@@ -4,12 +4,6 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-/**
- * @method static static FondsLevelOne()
- * @method static static FondsLevelTwo()
- * @method static static FondsLevelThree()
- * @method static static FondsLevelFour()
- */
 final class FondsType extends Enum
 {
     const FondsLevelOne =   "1- 1000万円";
