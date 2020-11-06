@@ -11,5 +11,5 @@ final class ScaleType extends Enum
     const ScaleLevelThree = "50-100";
     const ScaleLevelFour  = "100-500";
     const ScaleLevelFive  = "500-1000";
-    const ScaleLevelSix   = "> 1000";
+    const ScaleLevelSix   = "1000 ~";
 }
