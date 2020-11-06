@@ -14,5 +14,8 @@ return [
    'profile_empty' => 'Profile Empty.',
    'logout_success' => 'You have successfully logged out.',
    'logout_fail' => 'Failed to logout, please try again.',
+   'comapny' => [
+      'update_success' => "Updated successfully"
+   ],
    
 ];

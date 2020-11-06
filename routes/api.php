@@ -19,5 +19,9 @@ Route::namespace('Api')->group(function () {
             Route::post('/profile', 'SaleUserController@profile');
         });
 
+        Route::prefix('company')->group(function () {
+            Route::put('/{id}', 'CompaniesController@update');
+        });
+
     });
 });

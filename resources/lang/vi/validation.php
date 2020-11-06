@@ -117,6 +117,9 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
+    "numeric_array" => "The :attribute field should be an array of numeric values",
+    "enum_value" => "The :attribute format is invalid.",
+
 
     /*
     |--------------------------------------------------------------------------
@@ -146,6 +149,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'phone' => 'Please enter the phone number correctly.',
+        'fax' => 'Please enter the fax number correctly.',
+    ],
 
 ];
