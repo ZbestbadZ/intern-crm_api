@@ -4,6 +4,7 @@ namespace App\Repositories\Companies;
 
 use Carbon\Carbon;
 use App\Models\Companies;
+use App\Models\Domain;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
@@ -15,9 +16,17 @@ class CompaniesRepository implements CompaniesRepositoryInterface
         $dataCompanies = Companies::whereHas('sales', function ($query)  use ($idSale) {
             $query->where('sale_user_id','=', $idSale);
         })
-        ->with('domains');
+        ->with('domains')->get();
+        $dataCompanies->transform(function ($item) {
+            $item['domains_show'] = $item['domains']->pluck('label');
+            unset($item['domains']);
+            return $item;
+        });
 
-        return DataTables::of($dataCompanies)
+    return DataTables::of($dataCompanies)
+                    // ->editColumn('domains', function($domain) {
+                    //     return array_column($domain, 'label');
+                    // })
                     ->filter(function ($query) use ($data) {
                         if (request()->has('name') && !empty($data['name'])) {
                             $query->where('name_jp', 'like', "%" . $data['name'] . "%")
