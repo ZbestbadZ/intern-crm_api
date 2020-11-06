@@ -2,7 +2,7 @@
 
 return [
     'limit' => 10,
-    'page' => 10,
+    'page' => 1,
     'is_delete'  => 1,
     'not_delete' => 0,
     'TIME_EXPIRE_RESET_PASSWORD' => 3,
