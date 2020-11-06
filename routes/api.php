@@ -20,7 +20,7 @@ Route::namespace('Api')->group(function () {
         });
 
         Route::prefix('company')->group(function () {
-            Route::get('/list', 'CompaniesController@list');
+            Route::get('', 'CompaniesController@index');
         });
 
     });

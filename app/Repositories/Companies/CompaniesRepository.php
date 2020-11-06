@@ -24,9 +24,6 @@ class CompaniesRepository implements CompaniesRepositoryInterface
         });
 
     return DataTables::of($dataCompanies)
-                    // ->editColumn('domains', function($domain) {
-                    //     return array_column($domain, 'label');
-                    // })
                     ->filter(function ($query) use ($data) {
                         if (request()->has('name') && !empty($data['name'])) {
                             $query->where('name_jp', 'like', "%" . $data['name'] . "%")

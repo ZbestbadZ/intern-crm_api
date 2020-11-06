@@ -19,7 +19,7 @@ class CompaniesController extends Controller
         $this->repository = $companies;
     }
 
-    public function list(Request $request){
+    public function index(Request $request){
         $data = $request->all();
         $dataListCompaines = $this->repository->list($data);
         return response()->success($dataListCompaines);
