@@ -13,8 +13,8 @@ class CompaniesRepository implements CompaniesRepositoryInterface
 {
     public function list($data){
         $idSale = Auth::id();
-        $limit  = 1;
-        $page = 1;
+        $limit  = config('constants.limit');
+        $page = config('constants.page');
 
         $dataCompaniesTmp = Companies::whereHas('sales', function ($query)  use ($idSale) {
             $query->where('sale_user_id','=', $idSale);
