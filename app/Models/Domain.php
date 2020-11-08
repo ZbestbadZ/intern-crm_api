@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Domain extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table = 'm_domains';
 
@@ -33,7 +34,7 @@ class Domain extends Model
     {
         return $this->id;
     }
-    
+
     public function companies()
     {
         return $this->belongsToMany(Companies::class, 't_company_domains',  'domain_id', 'company_id');

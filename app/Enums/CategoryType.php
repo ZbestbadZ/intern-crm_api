@@ -6,10 +6,10 @@ use BenSampo\Enum\Enum;
 
 final class CategoryType extends Enum
 {
-    const CategoryLevelOne   = 'crm.category.tn1';
-    const CategoryLevelTwo   = 'crm.category.tn2';
-    const CategoryLevelThree = 'crm.category.tn3';
-    const CategoryLevelFour  = 'crm.category.tn4';
-    const CategoryLevelFive  = 'crm.category.tn5';
-    const CategoryLevelOfficial   = 'crm.category.ct6';
+    const LevelOne   = 1;
+    const LevelTwo   = 2;
+    const LevelThree = 3;
+    const LevelFour  = 4;
+    const LevelFive  = 5;
+    const LevelOfficial   = 6;
 }

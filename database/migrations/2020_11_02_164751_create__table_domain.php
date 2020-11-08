@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 class CreateTableDomain extends Migration
 {
     /**
@@ -17,6 +16,7 @@ class CreateTableDomain extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

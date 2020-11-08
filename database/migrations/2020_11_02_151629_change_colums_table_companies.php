@@ -3,6 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\CategoryType;
+use App\Enums\CapitalType;
+use App\Enums\ScaleType;
 
 class ChangeColumsTableCompanies extends Migration
 {
@@ -17,28 +20,28 @@ class ChangeColumsTableCompanies extends Migration
             $table->renameColumn('name', 'name_jp');
             $table->string('name_vn');
             $table->enum('category',[
-                'crm.category.tn1', 
-                'crm.category.tn2', 
-                'crm.category.tn3', 
-                'crm.category.tn4', 
-                'crm.category.tn5', 
-                'crm.category.ct6'
+                    CategoryType::LevelOne,
+                    CategoryType::LevelTwo,
+                    CategoryType::LevelThree,
+                    CategoryType::LevelFour,
+                    CategoryType::LevelFive,
+                    CategoryType::LevelOfficial,
                 ]
             );
             $table->timestamp('established_at')->nullable()->comment('Established Date');
             $table->enum('scale', [
-                '1-10',
-                '10-50',
-                '50-100',
-                '100-500',
-                '500-1000',
-                '1000 ~',
+                ScaleType::LevelOne,
+                ScaleType::LevelTwo,
+                ScaleType::LevelThree,
+                ScaleType::LevelFour,
+                ScaleType::LevelFive,
+                ScaleType::LevelSix,
             ]);
-            $table->enum('fonds', [
-                '1- 1000万円',
-                '1000-5000万円',
-                '5000~1億円',
-                '1億円 ~',
+            $table->enum('capital', [
+                CapitalType::LevelOne,
+                CapitalType::LevelTwo,
+                CapitalType::LevelThree,
+                CapitalType::LevelFour,
             ]);
             $table->decimal('revenue', 12, 0)->nullable()->comment('Revenue');
             $table->decimal('unit_price', 12, 0)->nullable()->comment('Univalence');
