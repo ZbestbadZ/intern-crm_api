@@ -16,6 +16,7 @@ class CompanyDomain extends Model
      *
      * @var array
      */
+
     protected $fillable = [
         'id', 'domain_id', 'company_id'
     ];
