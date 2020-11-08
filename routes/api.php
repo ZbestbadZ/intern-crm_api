@@ -13,10 +13,16 @@ Route::namespace('Api')->group(function () {
         Route::post('/change_forgot_password', 'SaleUserController@changeForgotPassword');
         Route::post('/logout', 'SaleUserController@logout');
     });
-
+    
     Route::group(['middleware' => 'authApi'], function () {
         Route::prefix('sale/user')->group(function () {
             Route::post('/profile', 'SaleUserController@profile');
+        });
+
+        Route::get('/domains', 'DomainController@index');
+
+        Route::prefix('company')->group(function () {
+            Route::post('/create', 'CompaniesController@create');
         });
 
     });
