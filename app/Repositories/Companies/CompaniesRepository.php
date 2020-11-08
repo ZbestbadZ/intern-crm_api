@@ -53,41 +53,42 @@ class CompaniesRepository implements CompaniesRepositoryInterface
             return false;
         }
     }
-    public function list($data){
+    public function list($data)
+    {
         $idSale = Auth::id();
-        $limit  = config('constants.limit');
+        $limit = config('constants.limit');
         $page = config('constants.page');
 
-        $dataCompaniesTmp = Companies::whereHas('sales', function ($query)  use ($idSale) {
-            $query->where('sale_user_id','=', $idSale);
+        $dataCompaniesTmp = Companies::whereHas('sales', function ($query) use ($idSale) {
+            $query->where('sale_user_id', '=', $idSale);
         })
-        ->with('domains');
+            ->with('domains');
 
         $recordsTotal = $dataCompaniesTmp->count();
 
-        if(isset($data['size']) && !empty($data['size'])){
+        if (isset($data['size']) && !empty($data['size'])) {
             $limit = $data['size'];
         }
-        if(isset($data['page']) && !empty($data['page'])){
+        if (isset($data['page']) && !empty($data['page'])) {
             $page = $data['page'];
         }
 
-        if(isset($data['name']) && !empty($data['name'])){
+        if (isset($data['name']) && !empty($data['name'])) {
             $nameCompaines = $data['name'];
-            $dataCompaniesTmp = $dataCompaniesTmp->where(function ($query) use ($nameCompaines)  {
-                        $query->where('name_jp', 'LIKE', '%'.$nameCompaines.'%')
-                            ->orWhere('name_vn', 'LIKE', '%'.$nameCompaines.'%');
-                    });
+            $dataCompaniesTmp = $dataCompaniesTmp->where(function ($query) use ($nameCompaines) {
+                $query->where('name_jp', 'LIKE', '%' . $nameCompaines . '%')
+                    ->orWhere('name_vn', 'LIKE', '%' . $nameCompaines . '%');
+            });
         }
-        if(isset($data['id']) && !empty($data['id'])) {
-            $dataCompaniesTmp = $dataCompaniesTmp->where('id',$data['id']);
+        if (isset($data['id']) && !empty($data['id'])) {
+            $dataCompaniesTmp = $dataCompaniesTmp->where('id', $data['id']);
         }
 
-        if(isset($data['domain_id'])) {
+        if (isset($data['domain_id'])) {
             $arrDomains = array_unique($data['domain_id']);
-             if (array_filter($arrDomains)) {
-                $dataCompaniesTmp = $dataCompaniesTmp->whereHas('domains', function ($query)  use ($arrDomains) {
-                                                    $query->whereIn('domain_id', $arrDomains);
+            if (array_filter($arrDomains)) {
+                $dataCompaniesTmp = $dataCompaniesTmp->whereHas('domains', function ($query) use ($arrDomains) {
+                    $query->whereIn('domain_id', $arrDomains);
                 });
             }
 
@@ -102,9 +103,52 @@ class CompaniesRepository implements CompaniesRepositoryInterface
         });
 
         return DataTables::of($dataCompanies)
-                    ->with([
-                        "recordsTotal" => $recordsTotal,
-                    ])
-                    ->make(true);
+            ->with([
+                "recordsTotal" => $recordsTotal,
+            ])
+            ->make(true);
+    }
+    public function show($id){
+        try {
+            $idSale = Auth::id();
+            $detailCompany = Companies::whereHas('sales', function ($query)  use ($idSale) {
+                $query->where('sale_user_id','=', $idSale);
+            })
+            ->with('domains')
+            ->where('id', $id)
+            ->firstOrFail();
+            return $detailCompany;
+        } catch (\Exception $e) {
+            Log::error($e);
+            return false;
+        }
+    }
+
+    public function delete($id){
+        try {
+            DB::beginTransaction();
+            $idSale = Auth::id();
+            $deleteCompany = Companies::whereHas('sales', function ($query)  use ($idSale) {
+                $query->where('sale_user_id','=', $idSale);
+            })
+            ->findOrFail($id);
+            $deleteCompany->delete();
+
+            // send mail admin
+            $profileSaleUser = Auth::user()->profile()->first();
+            $fullNameSaleUser = !empty($profileSaleUser) ? $profileSaleUser->full_name : '';
+            $dataSendMail['mailSaleAdmin'] = Config::get('constants.mail_admin');
+            $dataSendMail['nameCompany'] = isset($deleteCompany) ? $deleteCompany['name_jp'] : '';
+            $dataSendMail['time'] = Carbon::now();
+            $dataSendMail['nameUserDelete'] = $fullNameSaleUser;
+            $dataSendMail['subject'] = __('message.company.subject_mail_delete_company');
+            dispatch((new SendMailDeleteCompany($dataSendMail))->onQueue('sendMailDeleteCompany'));
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+            return false;
+        }
     }
 }

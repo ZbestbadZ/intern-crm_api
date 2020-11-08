@@ -22,9 +22,11 @@ class Domain extends Model
      * @var array
      */
 
+
     protected $fillable = [
         'id', 'name', 'description'
     ];
+
 
     public function getLabelAttribute()
     {

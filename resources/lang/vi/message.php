@@ -14,5 +14,11 @@ return [
    'profile_empty' => 'Profile Empty.',
    'logout_success' => 'You have successfully logged out.',
    'logout_fail' => 'Failed to logout, please try again.',
+   'not_found' => 'Not Found.',
+   'company' => [
+      'delete_success' => 'Company deleted successfully.', 
+      'delete_error' => 'Error deleting record.',
+      'subject_mail_delete_company' => '[CRM-Miichisoft] Xoá thông tin công ty khách hàng',
+   ]
    
 ];

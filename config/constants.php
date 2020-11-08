@@ -10,4 +10,5 @@ return [
         'create_new' => 1,
         'forgot_password' => 2
     ],
+    'mail_admin' => 'admin@michisoft.net'
 ];

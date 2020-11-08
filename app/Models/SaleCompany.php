@@ -20,4 +20,5 @@ class SaleCompany extends Model
     protected $fillable = [
         'id', 'sale_user_id', 'company_id'
     ];
+
 }

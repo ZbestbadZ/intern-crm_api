@@ -12,8 +12,6 @@ class Companies extends Model
 
     protected $table = 't_companies';
     protected $primaryKey = 'id';
-
-    // public $incrementing = false;
     protected $appends = ['key'];
 
     /**
@@ -39,13 +37,11 @@ class Companies extends Model
     {
         return $this->belongsToMany(SaleUser::class, 't_sale_company', 'company_id', 'sale_user_id');
     }
-    public function sales()
-    {
-        return $this->belongsToMany(SaleUser::class, 't_sale_company', 'company_id', 'sale_user_id');
-    }
+
 
     public function getLabel()
     {
         return $this->domains->pluck('label');
     }
+
 }
