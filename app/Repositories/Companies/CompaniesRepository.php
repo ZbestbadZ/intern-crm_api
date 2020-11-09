@@ -162,6 +162,10 @@ class CompaniesRepository implements CompaniesRepositoryInterface
                 $query->where('sale_user_id','=', $idSale);
             })
             ->findOrFail($id);
+
+            // $deleteCompany->cutomers()->delete();
+            $deleteCompany->domains()->sync([]);
+            $deleteCompany->sale()->sync([]);
             $deleteCompany->delete();
 
             // send mail admin
