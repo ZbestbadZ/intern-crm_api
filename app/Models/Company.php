@@ -20,7 +20,7 @@ class Company extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category', 'established_at', 'scale', 'fonds', 'revenue', 'unit_price',
+        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category', 'established_at', 'scale', 'capital', 'revenue', 'unit_price',
     ];
 
     public function getKeyAttribute()

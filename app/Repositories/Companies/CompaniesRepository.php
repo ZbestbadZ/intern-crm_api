@@ -18,6 +18,7 @@ class CompaniesRepository implements CompaniesRepositoryInterface
         try {
             DB::beginTransaction();
             $newCompany = new Company();
+            // dump($newCompany->getLabel()->where('id', ));
             $newCompany->name_jp = $data['name_jp'];
             $newCompany->name_vn = $data['name_vn'];
             $newCompany->category = $data['category'];
@@ -28,7 +29,7 @@ class CompaniesRepository implements CompaniesRepositoryInterface
             $newCompany->description = isset($data['description']) ? $data['description'] : null;
             $newCompany->established_at = isset($data['established_at']) ? $data['established_at'] : null;
             $newCompany->scale = isset($data['scale']) ? $data['scale'] : null;
-            $newCompany->fonds = isset($data['fonds']) ? $data['fonds'] : null;
+            $newCompany->capital = isset($data['capital']) ? $data['capital'] : null;
             $newCompany->revenue = isset($data['revenue']) ? $data['revenue'] : null;
             $newCompany->unit_price = isset($data['unit_price']) ? $data['unit_price'] : null;
             $newCompany->save();
