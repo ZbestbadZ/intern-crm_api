@@ -128,13 +128,14 @@ class CompaniesRepository implements CompaniesRepositoryInterface
         try {
             DB::beginTransaction();
             $idSale = Auth::id();
-            $deleteCompany = Companies::whereHas('sales', function ($query)  use ($idSale) {
+            $deleteCompany = Companies::whereHas('sale', function ($query)  use ($idSale) {
                 $query->where('sale_user_id','=', $idSale);
             })
             ->findOrFail($id);
+
             // $deleteCompany->cutomers()->delete();
-            $deleteCompany->domains()->delete();
-            $deleteCompany->sale()->delete();
+            $deleteCompany->domains()->sync([]);
+            $deleteCompany->sale()->sync([]);
             $deleteCompany->delete();
 
             // send mail admin
