@@ -143,11 +143,8 @@ class CompaniesRepository implements CompaniesRepositoryInterface
 
             // process create company with customer
             // $arrCustomer = array_unique($data['customer_id']);
-           
 
             $updateCompany->update($data);
-
-
             DB::commit();
             return true;
         } catch (\Exception $e) {
