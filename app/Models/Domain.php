@@ -4,19 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Domain extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
+
     protected $table = 'm_domains';
+
+    protected $appends = ['label', 'value'];
+
+    protected $visible = ['id', 'label', 'value'];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+
 
     protected $fillable = [
         'id', 'name', 'description'
     ];
 
-    protected $appends = ['label', 'value'];
-
-    protected $visible = ['id', 'label', 'value'];
 
     public function getLabelAttribute()
     {

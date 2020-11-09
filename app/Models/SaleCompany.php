@@ -9,7 +9,13 @@ class SaleCompany extends Model
 {
     use HasFactory;
 
-    protected $table = 't_sale_company';
+    protected $table = 't_sale_companies';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
 
     protected $fillable = [
         'id', 'sale_user_id', 'company_id'

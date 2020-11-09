@@ -26,11 +26,11 @@ class CheckTel implements Rule
      */
     public function passes($attribute, $value)
     {
-        $checkNull = preg_replace("/[\(\)\+\-]+/", '', $value);
-        $checkNull = trim($checkNull);
-        if (strlen($checkNull) === 0){
-        return false;
-        }
+    $checkNull = preg_replace("/[\(\)\+\-]+/", '', $value);
+    $checkNull = trim($checkNull);
+    if (strlen($checkNull) === 0){
+      return false;
+    }
 
         $str = preg_replace('/[\d\(\)\+\-]+/', '', $value);
 
@@ -48,5 +48,4 @@ class CheckTel implements Rule
     {
         return $this->field;
     }
-
 }

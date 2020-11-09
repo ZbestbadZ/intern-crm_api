@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 use Carbon\Carbon;
-
 use Illuminate\Support\Facades\Event;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         $repositories = [
             'SaleUser\SaleUserRepositoryInterface' => 'SaleUser\SaleUserRepository',
             'EmailAuth\EmailAuthRepositoryInterface' => 'EmailAuth\EmailAuthRepository',
+            'Domain\DomainRepositoryInterface' => 'Domain\DomainRepository',
             'Companies\CompaniesRepositoryInterface' => 'Companies\CompaniesRepository',
         ];
 
@@ -37,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Schema::defaultStringLength(191);
+        Schema::defaultStringLength(255);
 
         \Validator::extend('numeric_array', function($attribute, $values, $parameters) {
             if(! is_array($values)) {
@@ -52,6 +53,5 @@ class AppServiceProvider extends ServiceProvider
 
             return true;
         });
-
     }
 }

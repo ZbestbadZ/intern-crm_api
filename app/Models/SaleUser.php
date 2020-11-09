@@ -78,4 +78,9 @@ class SaleUser extends Authenticatable implements JWTSubject
         return $this->hasOne(Profile::class, 'id', 'profile_id');
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Companies::class, 't_sale_companies', 'sale_user_id', 'company_id');
+    }
+
 }

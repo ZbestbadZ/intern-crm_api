@@ -12,6 +12,7 @@ class Companies extends Model
 
     protected $table = 't_companies';
     protected $primaryKey = 'id';
+    protected $appends = ['key'];
 
     /**
      * The attributes that are mass assignable.
@@ -19,16 +20,27 @@ class Companies extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category', 'established_at', 'scale', 'fonds', 'revenue', 'unit_price', 
-    ]; 
+        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category', 'established_at', 'scale', 'fonds', 'revenue', 'unit_price',
+    ];
+
+    public function getKeyAttribute()
+    {
+        return $this->id;
+    }
 
     public function domains()
     {
         return $this->belongsToMany(Domain::class, 't_company_domains', 'company_id', 'domain_id');
     }
 
-    public function sales()
+    public function sale()
     {
-        return $this->belongsToMany(SaleUser::class, 't_sale_company', 'company_id', 'sale_user_id');
+        return $this->belongsToMany(SaleUser::class, 't_sale_companies', 'company_id', 'sale_user_id');
+    }
+
+
+    public function getLabel()
+    {
+        return $this->domains->pluck('label');
     }
 }
