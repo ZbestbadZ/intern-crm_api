@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Companies;
 
-use App\Models\Companies;
+use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -17,36 +17,36 @@ class CompaniesRepository implements CompaniesRepositoryInterface
     {
         try {
             DB::beginTransaction();
-            $newCompanies = new Companies();
-            $newCompanies->name_jp = $data['name_jp'];
-            $newCompanies->name_vn = $data['name_vn'];
-            $newCompanies->category = $data['category'];
-            $newCompanies->phone = isset($data['phone']) ? $data['phone'] : null;
-            $newCompanies->fax = isset($data['fax']) ? $data['fax'] : null;
-            $newCompanies->website = isset($data['website']) ? $data['website'] : null;
-            $newCompanies->address = isset($data['address']) ? $data['address'] : null;
-            $newCompanies->description = isset($data['description']) ? $data['description'] : null;
-            $newCompanies->established_at = isset($data['established_at']) ? $data['established_at'] : null;
-            $newCompanies->scale = isset($data['scale']) ? $data['scale'] : null;
-            $newCompanies->fonds = isset($data['fonds']) ? $data['fonds'] : null;
-            $newCompanies->revenue = isset($data['revenue']) ? $data['revenue'] : null;
-            $newCompanies->unit_price = isset($data['unit_price']) ? $data['unit_price'] : null;
-            $newCompanies->save();
+            $newCompany = new Company();
+            $newCompany->name_jp = $data['name_jp'];
+            $newCompany->name_vn = $data['name_vn'];
+            $newCompany->category = $data['category'];
+            $newCompany->phone = isset($data['phone']) ? $data['phone'] : null;
+            $newCompany->fax = isset($data['fax']) ? $data['fax'] : null;
+            $newCompany->website = isset($data['website']) ? $data['website'] : null;
+            $newCompany->address = isset($data['address']) ? $data['address'] : null;
+            $newCompany->description = isset($data['description']) ? $data['description'] : null;
+            $newCompany->established_at = isset($data['established_at']) ? $data['established_at'] : null;
+            $newCompany->scale = isset($data['scale']) ? $data['scale'] : null;
+            $newCompany->fonds = isset($data['fonds']) ? $data['fonds'] : null;
+            $newCompany->revenue = isset($data['revenue']) ? $data['revenue'] : null;
+            $newCompany->unit_price = isset($data['unit_price']) ? $data['unit_price'] : null;
+            $newCompany->save();
 
             // process create orbit with company
             $dataDomain = isset($data['domain_id']) ? $data['domain_id'] : '';
             if (!empty($dataDomain)) {
-                $newCompanies->domains()->attach($dataDomain);
+                $newCompany->domains()->attach($dataDomain);
             }
 
             // process create sale with company
-            $newCompanies->sale()->attach(Auth::id());
+            $newCompany->sale()->attach(Auth::id());
 
             // process create customer with company
             // $arrCustomer = array_unique($data['customer_id']);
 
             DB::commit();
-            return $newCompanies->id;
+            return $newCompany->id;
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error($exception);
@@ -60,7 +60,7 @@ class CompaniesRepository implements CompaniesRepositoryInterface
         $limit = config('constants.limit');
         $page = config('constants.page');
 
-        $dataCompaniesTmp = Companies::whereHas('sale', function ($query) use ($idSale) {
+        $dataCompaniesTmp = Company::whereHas('sale', function ($query) use ($idSale) {
             $query->where('sale_user_id', '=', $idSale);
         })
             ->with('domains');
@@ -113,7 +113,7 @@ class CompaniesRepository implements CompaniesRepositoryInterface
     public function show($id){
         try {
             $idSale = Auth::id();
-            $detailCompany = Companies::whereHas('sale', function ($query)  use ($idSale) {
+            $detailCompany = Company::whereHas('sale', function ($query)  use ($idSale) {
                 $query->where('sale_user_id','=', $idSale);
             })
             ->with('domains')
@@ -130,7 +130,7 @@ class CompaniesRepository implements CompaniesRepositoryInterface
         try { 
             DB::beginTransaction();
             $idSale = Auth::id();
-            $updateCompany = Companies::whereHas('sale', function ($query)  use ($idSale) {
+            $updateCompany = Company::whereHas('sale', function ($query)  use ($idSale) {
                 $query->where('sale_user_id','=', $idSale);
             })
             ->findOrFail($id);
@@ -158,7 +158,7 @@ class CompaniesRepository implements CompaniesRepositoryInterface
         try {
             DB::beginTransaction();
             $idSale = Auth::id();
-            $deleteCompany = Companies::whereHas('sale', function ($query)  use ($idSale) {
+            $deleteCompany = Company::whereHas('sale', function ($query)  use ($idSale) {
                 $query->where('sale_user_id','=', $idSale);
             })
             ->findOrFail($id);
