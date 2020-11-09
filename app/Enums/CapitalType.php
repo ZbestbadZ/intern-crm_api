@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-final class FondsType extends Enum
+final class CapitalType extends Enum
 {
     const LevelOne =   1;  //1-1000万円
     const LevelTwo =   2; // 1000-5000万円

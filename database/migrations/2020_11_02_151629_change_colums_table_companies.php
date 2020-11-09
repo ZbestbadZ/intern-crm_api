@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Enums\CategoryType;
-use App\Enums\FondsType;
+use App\Enums\CapitalType;
 use App\Enums\ScaleType;
 
 class ChangeColumsTableCompanies extends Migration
@@ -37,11 +37,11 @@ class ChangeColumsTableCompanies extends Migration
                 ScaleType::LevelFive,
                 ScaleType::LevelSix,
             ]);
-            $table->enum('fonds', [
-                FondsType::LevelOne,
-                FondsType::LevelTwo,
-                FondsType::LevelThree,
-                FondsType::LevelFour,
+            $table->enum('capital', [
+                CapitalType::LevelOne,
+                CapitalType::LevelTwo,
+                CapitalType::LevelThree,
+                CapitalType::LevelFour,
             ]);
             $table->decimal('revenue', 12, 0)->nullable()->comment('Revenue');
             $table->decimal('unit_price', 12, 0)->nullable()->comment('Univalence');
@@ -61,7 +61,7 @@ class ChangeColumsTableCompanies extends Migration
             $table->dropColumn('category');
             $table->dropColumn('established_at');
             $table->dropColumn('scale');
-            $table->dropColumn('fonds');
+            $table->dropColumn('capital');
             $table->dropColumn('revenue');
             $table->dropColumn('unit_price');
         });

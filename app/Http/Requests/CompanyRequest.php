@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Rules\CheckTel;
 use App\Enums\CategoryType;
 use App\Enums\ScaleType;
-use App\Enums\FondsType;
+use App\Enums\CapitalType;
 
 class CompanyRequest extends FormRequest
 {
@@ -58,7 +58,7 @@ class CompanyRequest extends FormRequest
             'fonds' => [
                 'bail',
                 'nullable',
-                'enum_value:'.FondsType::class.',false',
+                'enum_value:'.CapitalType::class.',false',
             ],
             'revenue' => [
                 'bail',
