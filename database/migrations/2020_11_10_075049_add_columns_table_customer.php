@@ -14,14 +14,13 @@ class AddColumnsTableCustomer extends Migration
     public function up()
     {
         Schema::table('t_customers', function (Blueprint $table) {
+            $table->bigInteger('company_id')->after('id');
+            $table->integer('position_id')->unsigned()->nullable()->after('company_id');
             $table->renameColumn('name','name_kanji');
-            $table->string('name_romanji')->after('email')->nullable();
-            $table->bigInteger('company_id');
+            $table->string('name_romanji')->after('name_kanji')->nullable();
             $table->date('birthday')->nullable();
-            $table->integer('position_id')->unsigned();
-            $table->text('description',1000)->nullable();
+            $table->text('description')->nullable();
         });
-
     }
 
     /**
