@@ -14,12 +14,12 @@ class DeleteColumnsTableCustomer extends Migration
     public function up()
     {
         Schema::table('t_customers', function (Blueprint $table) {
-            $table->dropColumn('fax');
-            $table->dropColumn('website');
-            $table->dropColumn('address');
-            $table->dropColumn('map_link');
-            $table->dropColumn('customs');
-            $table->dropColumn('description');
+            $table->string('fax')->nullable()->change();
+            $table->string('website')->nullable()->change();
+            $table->string('address')->nullable()->change();
+            $table->string('map_link')->nullable()->change();
+            $table->string('customs')->nullable()->change();
+            $table->string('description')->nullable()->change();
         });
 
     }
@@ -31,14 +31,6 @@ class DeleteColumnsTableCustomer extends Migration
      */
     public function down()
     {
-        Schema::table('t_customers', function (Blueprint $table) {
-            $table->string('fax')->nullable();
-            $table->string('website')->nullable();
-            $table->string('address')->nullable();
-            $table->string('map_link')->nullable();
-            $table->string('customs')->nullable();
-            $table->string('description')->nullable();
-        });
 
     }
 }

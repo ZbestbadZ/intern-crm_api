@@ -14,13 +14,12 @@ class AddColumnsTableCustomer extends Migration
     public function up()
     {
         Schema::table('t_customers', function (Blueprint $table) {
-            $table->bigInteger('company_id');
             $table->renameColumn('name','name_kanji');
-            $table->string('name_romanji')->nullable();
-            $table->dateTime('birthday')->nullable();
+            $table->string('name_romanji')->after('email')->nullable();
+            $table->bigInteger('company_id');
+            $table->date('birthday')->nullable();
             $table->integer('position_id')->unsigned();
-            $table->string('description',1000)->nullable();
-            $table->foreign('position_id')->references('id')->on('m_job_levels');
+            $table->text('description',1000)->nullable();
         });
 
     }
@@ -33,7 +32,6 @@ class AddColumnsTableCustomer extends Migration
     public function down()
     {
         Schema::table('t_customers', function (Blueprint $table) {
-            $table->dropForeign(['position_id']);
             $table->dropColumn('name_romanji');
             $table->dropColumn('company_id');
             $table->dropColumn('birthday');
