@@ -61,7 +61,7 @@ class ChangeColumsTableCompanies extends Migration
             $table->dropColumn('category');
             $table->dropColumn('established_at');
             $table->dropColumn('scale');
-            $table->dropColumn('fonds');
+            $table->dropColumn('capital');
             $table->dropColumn('revenue');
             $table->dropColumn('unit_price');
         });

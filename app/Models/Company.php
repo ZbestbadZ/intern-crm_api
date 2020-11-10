@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Companies extends Model
+class Company extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -20,7 +20,7 @@ class Companies extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category', 'established_at', 'scale', 'fonds', 'revenue', 'unit_price',
+        'id', 'name_jp', 'name_vn', 'phone', 'fax', 'website', 'address', 'description', 'category', 'established_at', 'scale', 'capital', 'revenue', 'unit_price',
     ];
 
     public function getKeyAttribute()
@@ -35,7 +35,7 @@ class Companies extends Model
 
     public function sale()
     {
-        return $this->belongsToMany(SaleUser::class, 't_sale_company', 'company_id', 'sale_user_id');
+        return $this->belongsToMany(SaleUser::class, 't_sale_companies', 'company_id', 'sale_user_id');
     }
 
 
@@ -43,5 +43,4 @@ class Companies extends Model
     {
         return $this->domains->pluck('label');
     }
-
 }

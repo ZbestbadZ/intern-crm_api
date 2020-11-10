@@ -80,7 +80,7 @@ class SaleUser extends Authenticatable implements JWTSubject
 
     public function companies()
     {
-        return $this->belongsToMany(Companies::class, 't_sale_company', 'sale_user_id', 'company_id');
+        return $this->belongsToMany(Company::class, 't_sale_companies', 'sale_user_id', 'company_id');
     }
 
 }

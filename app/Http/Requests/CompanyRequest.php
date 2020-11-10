@@ -55,7 +55,7 @@ class CompanyRequest extends FormRequest
                 'nullable',
                 'enum_value:'.ScaleType::class.',false',
             ],
-            'fonds' => [
+            'capital' => [
                 'bail',
                 'nullable',
                 'enum_value:'.CapitalType::class.',false',

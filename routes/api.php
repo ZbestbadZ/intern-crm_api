@@ -21,10 +21,11 @@ Route::namespace('Api')->group(function () {
 
         Route::get('/domains', 'DomainController@index');
 
-        Route::prefix('company')->group(function () {
+        Route::prefix('companies')->group(function () {
             Route::post('', 'CompaniesController@create');
             Route::get('', 'CompaniesController@index');
             Route::get('/{id}', 'CompaniesController@show');
+            Route::put('/{id}', 'CompaniesController@update');
             Route::delete('/{id}', 'CompaniesController@delete');
         });
     });

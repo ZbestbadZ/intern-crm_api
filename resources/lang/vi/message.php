@@ -19,6 +19,6 @@ return [
       'delete_success' => 'Company deleted successfully.', 
       'delete_error' => 'Error deleting record.',
       'subject_mail_delete_company' => '[CRM-Miichisoft] Xoá thông tin công ty khách hàng',
+      'update_success' => "Updated successfully"
    ]
-   
 ];
