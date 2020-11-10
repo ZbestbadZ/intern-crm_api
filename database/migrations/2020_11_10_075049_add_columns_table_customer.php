@@ -22,7 +22,6 @@ class AddColumnsTableCustomer extends Migration
             $table->date('birthday')->after('email')->nullable();
             $table->text('description')->after('email')->nullable();
         });
-
     }
 
     /**
