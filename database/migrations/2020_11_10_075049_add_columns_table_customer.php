@@ -20,7 +20,6 @@ class AddColumnsTableCustomer extends Migration
             $table->bigInteger('company_id')->after('id');
             $table->integer('position_id')->unsigned()->nullable()->after('company_id');
             $table->date('birthday')->after('email')->nullable();
-            $table->text('description')->after('email')->nullable();
         });
     }
 
@@ -36,7 +35,6 @@ class AddColumnsTableCustomer extends Migration
             $table->dropColumn('company_id');
             $table->dropColumn('birthday');
             $table->dropColumn('position_id');
-            $table->dropColumn('description');
             $table->renameColumn('name_kanji','name');
         });
 
