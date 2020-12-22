@@ -17,7 +17,7 @@ services:
     image: nginx:alpine
     container_name: crm_nginx
     ports:
-      - "8089:80"
+      - "8000:80"
       - "4433:443"
     volumes:
       - ./:/var/www

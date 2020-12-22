@@ -1,4 +1,11 @@
 <?php return array (
+  'bensampo/laravel-enum' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'BenSampo\\Enum\\EnumServiceProvider',
+    ),
+  ),
   'facade/ignition' => 
   array (
     'providers' => 
@@ -55,6 +62,17 @@
     'providers' => 
     array (
       0 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
+    ),
+  ),
+  'yajra/laravel-datatables-oracle' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'DataTables' => 'Yajra\\DataTables\\Facades\\DataTables',
     ),
   ),
 );

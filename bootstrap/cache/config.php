@@ -1,16 +1,17 @@
 <?php return array (
   'app' => 
   array (
-    'name' => 'crm_api',
+    'name' => 'Laravel',
     'env' => 'local',
+    'debug_log_queries' => false,
     'debug' => true,
     'url' => 'http://localhost',
     'asset_url' => NULL,
-    'timezone' => 'UTC',
-    'locale' => 'en',
-    'fallback_locale' => 'en',
+    'timezone' => 'Asia/Ho_Chi_Minh',
+    'locale' => 'vi',
+    'fallback_locale' => 'vi',
     'faker_locale' => 'en_US',
-    'key' => 'base64:s0YOMVz9ha0zOUclOpwwpuAYWweQC3+lSRjCQyGMV8k=',
+    'key' => 'base64:nbjQYRCQx+NH7E0rLHxmxyW7TVQatwKNN7RXHiyCOYQ=',
     'cipher' => 'AES-256-CBC',
     'providers' => 
     array (
@@ -41,6 +42,8 @@
       24 => 'App\\Providers\\EventServiceProvider',
       25 => 'App\\Providers\\RouteServiceProvider',
       26 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
+      27 => 'App\\Providers\\ResponseMacroServiceProvider',
+      28 => 'Yajra\\DataTables\\DataTablesServiceProvider',
     ),
     'aliases' => 
     array (
@@ -81,14 +84,15 @@
       'Validator' => 'Illuminate\\Support\\Facades\\Validator',
       'View' => 'Illuminate\\Support\\Facades\\View',
       'JWTAuth' => 'Tymon\\JWTAuth\\Facades\\JWTAuth',
+      'DataTables' => 'Yajra\\DataTables\\Facades\\DataTables',
     ),
   ),
   'auth' => 
   array (
     'defaults' => 
     array (
-      'guard' => 'web',
-      'passwords' => 'users',
+      'guard' => 'sale_user',
+      'passwords' => 'sale_user',
     ),
     'guards' => 
     array (
@@ -103,6 +107,12 @@
         'provider' => 'users',
         'hash' => false,
       ),
+      'sale_user' => 
+      array (
+        'driver' => 'jwt',
+        'provider' => 'sale_user',
+        'hash' => false,
+      ),
     ),
     'providers' => 
     array (
@@ -110,6 +120,11 @@
       array (
         'driver' => 'eloquent',
         'model' => 'App\\Models\\User',
+      ),
+      'sale_user' => 
+      array (
+        'driver' => 'eloquent',
+        'model' => 'App\\Models\\SaleUser',
       ),
     ),
     'passwords' => 
@@ -120,6 +135,12 @@
         'table' => 'password_resets',
         'expire' => 60,
         'throttle' => 60,
+      ),
+      'sale_user' => 
+      array (
+        'provider' => 'sale_user',
+        'table' => 'password_resets',
+        'expire' => 60,
       ),
     ),
     'password_timeout' => 10800,
@@ -179,7 +200,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => '/var/www/storage/framework/cache/data',
+        'path' => 'C:\\xampp\\htdocs\\crm-api\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -218,11 +239,12 @@
         'endpoint' => NULL,
       ),
     ),
-    'prefix' => 'crm_api_cache',
+    'prefix' => 'laravel_cache',
   ),
   'constants' => 
   array (
-    'limit' => 20,
+    'limit' => 10,
+    'page' => 1,
     'is_delete' => 1,
     'not_delete' => 0,
     'TIME_EXPIRE_RESET_PASSWORD' => 3,
@@ -231,6 +253,7 @@
       'create_new' => 1,
       'forgot_password' => 2,
     ),
+    'mail_admin' => 'admin@michisoft.net',
   ),
   'cors' => 
   array (
@@ -276,11 +299,11 @@
       array (
         'driver' => 'mysql',
         'url' => NULL,
-        'host' => 'mysql',
+        'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'miichi_crm_api',
         'username' => 'root',
-        'password' => 'root',
+        'password' => '',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -296,11 +319,11 @@
       array (
         'driver' => 'pgsql',
         'url' => NULL,
-        'host' => 'mysql',
+        'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'miichi_crm_api',
         'username' => 'root',
-        'password' => 'root',
+        'password' => '',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -311,11 +334,11 @@
       array (
         'driver' => 'sqlsrv',
         'url' => NULL,
-        'host' => 'mysql',
+        'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'miichi_crm_api',
         'username' => 'root',
-        'password' => 'root',
+        'password' => '',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -328,7 +351,7 @@
       'options' => 
       array (
         'cluster' => 'redis',
-        'prefix' => 'crm_api_database_',
+        'prefix' => 'laravel_database_',
       ),
       'default' => 
       array (
@@ -348,6 +371,56 @@
       ),
     ),
   ),
+  'datatables' => 
+  array (
+    'search' => 
+    array (
+      'smart' => true,
+      'multi_term' => true,
+      'case_insensitive' => true,
+      'use_wildcards' => false,
+      'starts_with' => false,
+    ),
+    'index_column' => 'DT_RowIndex',
+    'engines' => 
+    array (
+      'eloquent' => 'Yajra\\DataTables\\EloquentDataTable',
+      'query' => 'Yajra\\DataTables\\QueryDataTable',
+      'collection' => 'Yajra\\DataTables\\CollectionDataTable',
+      'resource' => 'Yajra\\DataTables\\ApiResourceDataTable',
+    ),
+    'builders' => 
+    array (
+    ),
+    'nulls_last_sql' => ':column :direction NULLS LAST',
+    'error' => NULL,
+    'columns' => 
+    array (
+      'excess' => 
+      array (
+        0 => 'rn',
+        1 => 'row_num',
+      ),
+      'escape' => '*',
+      'raw' => 
+      array (
+        0 => 'action',
+      ),
+      'blacklist' => 
+      array (
+        0 => 'password',
+        1 => 'remember_token',
+      ),
+      'whitelist' => '*',
+    ),
+    'json' => 
+    array (
+      'header' => 
+      array (
+      ),
+      'options' => 0,
+    ),
+  ),
   'filesystems' => 
   array (
     'default' => 'local',
@@ -357,12 +430,12 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => '/var/www/storage/app',
+        'root' => 'C:\\xampp\\htdocs\\crm-api\\storage\\app',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => '/var/www/storage/app/public',
+        'root' => 'C:\\xampp\\htdocs\\crm-api\\storage\\app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
       ),
@@ -379,7 +452,7 @@
     ),
     'links' => 
     array (
-      '/var/www/public/storage' => '/var/www/storage/app/public',
+      'C:\\xampp\\htdocs\\crm-api\\public\\storage' => 'C:\\xampp\\htdocs\\crm-api\\storage\\app/public',
     ),
   ),
   'hashing' => 
@@ -398,24 +471,23 @@
   ),
   'jwt' => 
   array (
-    'secret' => 'U95EAcmfbGmDmbdmn1Zk9OGaWNu57MVIyNkGDvovmnUGH7Vo1O1fClxGFrv2hnzf',
+    'secret' => '25ZgtjNOtw9twTE19DKg737huydaZ7Ho56y9dmD4KAfnFrbrewEQm6oDgabSBgd41yjBbPqKJmJ90SOttamiqvhRA4JpV5Sc4IorsHHy95HtAHWkiv5mkGhHRjPwVQuY',
     'keys' => 
     array (
       'public' => NULL,
       'private' => NULL,
       'passphrase' => NULL,
     ),
-    'ttl' => 60,
+    'ttl' => NULL,
     'refresh_ttl' => 20160,
     'algo' => 'HS256',
     'required_claims' => 
     array (
       0 => 'iss',
       1 => 'iat',
-      2 => 'exp',
-      3 => 'nbf',
-      4 => 'sub',
-      5 => 'jti',
+      2 => 'nbf',
+      3 => 'sub',
+      4 => 'jti',
     ),
     'persistent_claims' => 
     array (
@@ -449,13 +521,13 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => '/var/www/storage/logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\crm-api\\storage\\logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => '/var/www/storage/logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\crm-api\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -505,7 +577,12 @@
       ),
       'emergency' => 
       array (
-        'path' => '/var/www/storage/logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\crm-api\\storage\\logs/laravel.log',
+      ),
+      'queries' => 
+      array (
+        'driver' => 'single',
+        'path' => 'C:\\xampp\\htdocs\\crm-api\\storage\\logs/queries_sql_api.log',
       ),
     ),
   ),
@@ -555,14 +632,14 @@
     'from' => 
     array (
       'address' => NULL,
-      'name' => 'crm_api',
+      'name' => 'Laravel',
     ),
     'markdown' => 
     array (
       'theme' => 'default',
       'paths' => 
       array (
-        0 => '/var/www/resources/views/vendor/mail',
+        0 => 'C:\\xampp\\htdocs\\crm-api\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -641,7 +718,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => '/var/www/storage/framework/sessions',
+    'files' => 'C:\\xampp\\htdocs\\crm-api\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -650,7 +727,7 @@
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'crm_api_session',
+    'cookie' => 'laravel_session',
     'path' => '/',
     'domain' => NULL,
     'secure' => NULL,
@@ -661,9 +738,9 @@
   array (
     'paths' => 
     array (
-      0 => '/var/www/resources/views',
+      0 => 'C:\\xampp\\htdocs\\crm-api\\resources\\views',
     ),
-    'compiled' => '/var/www/storage/framework/views',
+    'compiled' => 'C:\\xampp\\htdocs\\crm-api\\storage\\framework\\views',
   ),
   'flare' => 
   array (
